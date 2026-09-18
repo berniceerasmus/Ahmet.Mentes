@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 1 — Daily Routine &amp; the Commute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F5FA;
+    --paper:#FFFFFF;
+    --ink:#16264F;
+    --body:#3B4560;
+    --muted:#6B7290;
+    --accent:#2A4FA0;
+    --accent-dark:#1D3A7D;
+    --warm:#A9782F;
+    --line:#DCE1EE;
+    --correct:#1F7A3D;
+    --correct-bg:#EAF4EC;
+    --incorrect:#B3261E;
+    --incorrect-bg:#FBEAEA;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--body);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .page{max-width:780px;margin:0 auto;padding:40px 24px 120px;}
+  h1,h2,h3{font-family:'Lora',serif;color:var(--ink);margin:0;}
+
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:24px;margin-bottom:20px;}
+  .masthead .phase{color:var(--warm);font-size:14px;font-weight:600;}
+  .masthead h1{font-size:32px;font-weight:700;margin-top:6px;line-height:1.2;}
+  .masthead .meta{color:var(--muted);font-size:14px;margin-top:10px;}
+
+  /* Shared top orientation paragraph */
+  .orientation{margin:0 0 24px;font-size:15.5px;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--accent);padding:16px 20px;}
+  .orientation strong{color:var(--ink);}
+
+  /* Tabs */
+  .tabs-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px;}
+  .tab-btn{
+    font-family:'Inter',sans-serif;font-size:15px;font-weight:700;padding:12px 26px;
+    border:none;color:#fff;cursor:pointer;opacity:0.5;transition:opacity 0.2s ease;
+  }
+  .tab-btn.active{opacity:1;}
+  .tab-btn.lesson-btn{background:var(--ink);}
+  .tab-btn.hw-btn{background:var(--warm);}
+
+  .intro{margin:0 0 20px;font-size:16px;}
+  .intro strong{color:var(--ink);}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* Accordion */
+  .accordion-item{border-top:1px solid var(--line);}
+  .accordion-item:last-child{border-bottom:1px solid var(--line);}
+  .accordion-header{
+    display:flex;align-items:center;gap:14px;padding:20px 4px;cursor:pointer;user-select:none;background:none;border:none;width:100%;text-align:left;
+  }
+  .accordion-header .num{font-family:'Lora',serif;font-size:15px;color:var(--accent);font-weight:600;flex:none;width:18px;}
+  .accordion-header .htext{flex:1;}
+  .accordion-header h2{font-size:20px;}
+  .accordion-header .sub{color:var(--muted);font-size:13.5px;margin-top:3px;}
+  .accordion-header .chev{flex:none;color:var(--muted);transition:transform 0.3s ease;font-size:18px;}
+  .accordion-item.open .chev{transform:rotate(180deg);}
+
+  .accordion-panel{display:none;}
+  .accordion-item.open .accordion-panel{display:block;}
+  .accordion-panel-inner{overflow:hidden;}
+  .accordion-body{padding:4px 4px 28px 32px;}
+
+  .callout{background:var(--paper);border-left:3px solid var(--warm);padding:14px 18px;margin:16px 0;font-size:15px;}
+  .callout strong{color:var(--ink);}
+
+  table.rule{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px;background:var(--paper);}
+  table.rule th,table.rule td{border:1px solid var(--line);padding:9px 12px;text-align:left;}
+  table.rule th{background:#E9EEF9;color:var(--ink);font-weight:600;}
+  table.rule td.eg{color:var(--accent-dark);font-style:italic;}
+
+  .vocab-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin:16px 0;}
+  @media (max-width:560px){.vocab-grid{grid-template-columns:1fr;}}
+  .vocab-item{background:var(--paper);border:1px solid var(--line);padding:11px 15px;}
+  .vocab-item .term{font-weight:600;color:var(--ink);font-size:14.5px;}
+  .vocab-item .def{font-size:13.5px;color:var(--muted);margin-top:2px;}
+
+  .exercise{background:var(--paper);border:1px solid var(--line);padding:20px 22px;margin:14px 0 0;}
+  .q{margin-bottom:16px;}
+  .q:last-child{margin-bottom:0;}
+  .q .prompt{font-size:14.5px;color:var(--ink);margin-bottom:7px;}
+  .q .prompt .n{color:var(--muted);margin-right:5px;}
+  .q input[type=text]{width:100%;max-width:420px;padding:8px 10px;font-size:14.5px;font-family:'Inter',sans-serif;border:1px solid #C7CCC4;background:#FBFBFA;color:var(--ink);}
+  .q input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .choices{display:flex;flex-direction:column;gap:7px;margin-top:5px;}
+  .choice{display:flex;align-items:center;gap:8px;font-size:14.5px;cursor:pointer;}
+  .feedback{font-size:13px;margin-top:5px;display:none;padding:3px 0;}
+  .feedback.show{display:block;}
+  .feedback.correct{color:var(--correct);}
+  .feedback.incorrect{color:var(--incorrect);}
+  .q.correct input[type=text]{background:var(--correct-bg);border-color:var(--correct);color:var(--correct);}
+  .q.incorrect input[type=text]{background:var(--incorrect-bg);border-color:var(--incorrect);color:var(--incorrect);}
+  .choice.correct-choice{color:var(--correct);font-weight:600;}
+  .choice.incorrect-choice{color:var(--incorrect);text-decoration:line-through;}
+
+  .exercise-actions{display:flex;gap:10px;margin-top:18px;}
+  button.check,button.reset{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;padding:8px 16px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;}
+  button.reset{background:transparent;color:var(--ink);}
+  button.check:hover{background:var(--accent-dark);border-color:var(--accent-dark);}
+  button.reset:hover{background:#EEF1EC;}
+  .score{font-size:13.5px;color:var(--muted);margin-top:10px;display:none;}
+  .score.show{display:block;}
+  .score b{color:var(--ink);}
+
+  .reading-passage{background:#FBFBFA;border:1px solid var(--line);padding:16px 18px;font-size:14.5px;margin-bottom:14px;}
+  .reading-passage p{margin:0 0 10px;}
+  .reading-passage p:last-child{margin-bottom:0;}
+
+  textarea{width:100%;min-height:150px;padding:12px 14px;font-family:'Inter',sans-serif;font-size:14.5px;border:1px solid #C7CCC4;background:#FBFBFA;color:var(--ink);resize:vertical;}
+  textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+
+  .voice-note-box{background:#FBF6EA;border:1px solid #E8D9AF;padding:14px 18px;margin-bottom:16px;font-size:14.5px;color:var(--ink);}
+  .voice-note-box strong{color:var(--warm);}
+
+  .speak-list{background:var(--paper);border:1px solid var(--line);padding:18px 22px;}
+  .speak-list ol{margin:0;padding-left:20px;}
+  .speak-list li{margin-bottom:10px;font-size:14.5px;}
+  .speak-list li:last-child{margin-bottom:0;}
+  .speak-note{color:var(--muted);font-size:13.5px;margin-bottom:12px;}
+
+  footer{margin-top:50px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:13px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="phase">Phase 1 — Foundations &amp; Confidence</div>
+    <h1>Lesson 1: Daily Routine &amp; the Commute</h1>
+    <div class="meta">Ahmet Menteş · Business English · Lesson ~50 min · Homework ~40 min</div>
+  </div>
+
+  <p class="orientation">Today we're fixing two patterns from your last homework — <strong>subject-verb agreement</strong> (everybody go → everybody goes) and mixing up <strong>present simple and present continuous</strong> — using your commute, meetings, and distributors as the material. Work through the <strong>Lesson</strong> tab with your teacher first (grammar, vocabulary, practice, reading, speaking), then use the <strong>Homework</strong> tab to consolidate on your own during the week.</p>
+
+  <div class="tabs-bar">
+    <button class="tab-btn lesson-btn active" id="tab-lesson-btn">Lesson</button>
+    <button class="tab-btn hw-btn" id="tab-hw-btn">Homework</button>
+  </div>
+
+  <!-- ===================== LESSON VIEW ===================== -->
+  <div class="view active" id="lesson-view">
+    <div class="accordion" id="lesson-accordion"></div>
+  </div>
+
+  <!-- ===================== HOMEWORK VIEW ===================== -->
+  <div class="view" id="homework-view">
+    <div class="accordion" id="hw-accordion"></div>
+  </div>
+
+  <footer>Lesson 1 of 36 · Phase 1: Foundations &amp; Confidence · Prepared for Ahmet Menteş</footer>
+</div>
+
+<script>
+/* ---------------- Tab switching ---------------- */
+const lessonView = document.getElementById('lesson-view');
+const hwView = document.getElementById('homework-view');
+const tabLessonBtn = document.getElementById('tab-lesson-btn');
+const tabHwBtn = document.getElementById('tab-hw-btn');
+
+function showLesson(){
+  lessonView.classList.add('active'); hwView.classList.remove('active');
+  tabLessonBtn.classList.add('active'); tabHwBtn.classList.remove('active');
+  window.scrollTo({top:0});
+}
+function showHomework(){
+  hwView.classList.add('active'); lessonView.classList.remove('active');
+  tabHwBtn.classList.add('active'); tabLessonBtn.classList.remove('active');
+  window.scrollTo({top:0});
+}
+tabLessonBtn.addEventListener('click', showLesson);
+tabHwBtn.addEventListener('click', showHomework);
+
+/* ---------------- Accordion builder ---------------- */
+function addAccordionSection(containerId, num, title, subtitle, openByDefault){
+  const container = document.getElementById(containerId);
+  const item = document.createElement('div');
+  item.className = 'accordion-item' + (openByDefault ? ' open' : '');
+  item.innerHTML = `
+    <button class="accordion-header">
+      <span class="num">${num}</span>
+      <span class="htext"><h2>${title}</h2><div class="sub">${subtitle}</div></span>
+      <span class="chev">⌄</span>
+    </button>
+    <div class="accordion-panel"><div class="accordion-panel-inner"><div class="accordion-body"></div></div></div>
+  `;
+  container.appendChild(item);
+  item.querySelector('.accordion-header').addEventListener('click', () => {
+    item.classList.toggle('open');
+  });
+  return item.querySelector('.accordion-body');
+}
+
+/* ---------------- Exercise helpers ---------------- */
+function norm(s){ return s.toLowerCase().trim().replace(/[.!?,;:'"]/g,'').replace(/\s+/g,' '); }
+function matches(input, accepted){ const n = norm(input); return accepted.some(a => norm(a) === n); }
+
+function buildTextExercise(container, items){
+  const wrap = document.createElement('div'); wrap.className = 'exercise';
+  items.forEach((item, i) => {
+    const qDiv = document.createElement('div'); qDiv.className = 'q';
+    qDiv.innerHTML = `<div class="prompt"><span class="n">${i+1}.</span>${item.prompt}</div>
+      <input type="text" autocomplete="off" spellcheck="false"><div class="feedback"></div>`;
+    wrap.appendChild(qDiv);
+  });
+  const actions = document.createElement('div'); actions.className = 'exercise-actions';
+  actions.innerHTML = `<button class="check">Check Answers</button><button class="reset">Reset</button>`;
+  wrap.appendChild(actions);
+  const scoreEl = document.createElement('div'); scoreEl.className = 'score'; wrap.appendChild(scoreEl);
+
+  actions.querySelector('.check').addEventListener('click', () => {
+    let c = 0;
+    wrap.querySelectorAll('.q').forEach((qDiv, i) => {
+      const input = qDiv.querySelector('input'); const fb = qDiv.querySelector('.feedback');
+      const ok = matches(input.value, items[i].accepted);
+      qDiv.classList.remove('correct','incorrect'); qDiv.classList.add(ok ? 'correct' : 'incorrect');
+      fb.classList.add('show');
+      if(ok){ c++; fb.className='feedback show correct'; fb.textContent='✓ Correct'; }
+      else { fb.className='feedback show incorrect'; fb.textContent=`✗ Correct answer: ${items[i].accepted[0]}`; }
+    });
+    scoreEl.classList.add('show'); scoreEl.innerHTML = `Score: <b>${c} / ${items.length}</b>`;
+  });
+  actions.querySelector('.reset').addEventListener('click', () => {
+    wrap.querySelectorAll('.q').forEach(qDiv => { qDiv.classList.remove('correct','incorrect'); qDiv.querySelector('input').value=''; qDiv.querySelector('.feedback').classList.remove('show'); });
+    scoreEl.classList.remove('show');
+  });
+  container.appendChild(wrap);
+}
+
+function buildMCExercise(container, items){
+  const exId = uid();
+  const wrap = document.createElement('div'); wrap.className = 'exercise';
+  items.forEach((item, i) => {
+    const qDiv = document.createElement('div'); qDiv.className = 'q';
+    const choicesHtml = item.options.map((opt,j) => `<label class="choice"><input type="radio" name="mc-${exId}-${i}" value="${j}"><span>${opt}</span></label>`).join('');
+    qDiv.innerHTML = `<div class="prompt"><span class="n">${i+1}.</span>${item.prompt}</div><div class="choices">${choicesHtml}</div><div class="feedback"></div>`;
+    wrap.appendChild(qDiv);
+  });
+  const actions = document.createElement('div'); actions.className = 'exercise-actions';
+  actions.innerHTML = `<button class="check">Check Answers</button><button class="reset">Reset</button>`;
+  wrap.appendChild(actions);
+  const scoreEl = document.createElement('div'); scoreEl.className = 'score'; wrap.appendChild(scoreEl);
+
+  actions.querySelector('.check').addEventListener('click', () => {
+    let c = 0;
+    wrap.querySelectorAll('.q').forEach((qDiv, i) => {
+      const selected = qDiv.querySelector('input[type=radio]:checked');
+      const fb = qDiv.querySelector('.feedback');
+      const labels = qDiv.querySelectorAll('.choice');
+      labels.forEach(l => l.classList.remove('correct-choice','incorrect-choice'));
+      const correctIdx = items[i].correct;
+      labels[correctIdx].classList.add('correct-choice');
+      fb.classList.add('show');
+      if(selected && parseInt(selected.value) === correctIdx){ c++; fb.className='feedback show correct'; fb.textContent='✓ Correct'; }
+      else { if(selected) labels[parseInt(selected.value)].classList.add('incorrect-choice'); fb.className='feedback show incorrect'; fb.textContent = selected ? '✗ Not quite — correct answer highlighted above' : '✗ No answer selected — correct answer highlighted above'; }
+    });
+    scoreEl.classList.add('show'); scoreEl.innerHTML = `Score: <b>${c} / ${items.length}</b>`;
+  });
+  actions.querySelector('.reset').addEventListener('click', () => {
+    wrap.querySelectorAll('.q').forEach(qDiv => { qDiv.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false); qDiv.querySelectorAll('.choice').forEach(l=>l.classList.remove('correct-choice','incorrect-choice')); qDiv.querySelector('.feedback').classList.remove('show'); });
+    scoreEl.classList.remove('show');
+  });
+  container.appendChild(wrap);
+}
+
+let uidCounter = 0;
+function uid(){ return uidCounter++; }
+
+/* =========================================================
+   LESSON TAB — 8 sections
+   ========================================================= */
+const lAcc = 'lesson-accordion';
+
+// L1 Grammar Focus
+let body = addAccordionSection(lAcc, 1, 'Grammar Focus: Present Simple &amp; Subject-Verb Agreement', 'The tense for routines, habits, and facts', true);
+body.innerHTML = `
+  <p>Use the <strong>present simple</strong> for things that happen regularly — your commute, your weekly meetings, your normal responsibilities. The verb form changes with the subject:</p>
+  <table class="rule">
+    <tr><th>Subject</th><th>Verb form</th><th>Example</th></tr>
+    <tr><td>I / you / we / they</td><td>base verb</td><td class="eg">I visit three hospitals a week.</td></tr>
+    <tr><td>he / she / it</td><td>base verb + s</td><td class="eg">He engages with the Dubai distributor every month.</td></tr>
+    <tr><td>everybody / everyone / nobody</td><td>base verb + s <em>(treated as "he/she/it")</em></td><td class="eg">Everybody goes to the office by 9.</td></tr>
+  </table>
+  <div class="callout"><strong>Watch out:</strong> <em>everybody</em>, <em>everyone</em>, and <em>anybody</em> feel plural, but grammatically take the "he/she/it" form. <em>Everybody goes</em>, not <em>everybody go</em>.</div>
+  <table class="rule">
+    <tr><th>❌ Not for routines</th><th>✅ Present simple</th></tr>
+    <tr><td class="eg">I am getting tired every evening.</td><td class="eg">I get tired every evening.</td></tr>
+    <tr><td class="eg">He is attending meetings often.</td><td class="eg">He attends meetings often.</td></tr>
+  </table>`;
+
+// L2 Vocabulary
+body = addAccordionSection(lAcc, 2, 'Vocabulary: Routine &amp; the Commute', 'Terms for describing your working day');
+const vocabItems = [
+  ['rush hour','the busiest time of day for traffic'],
+  ['commute','the regular journey between home and work'],
+  ['distributor','a company that supplies products to clients on your behalf'],
+  ['sub-distributor','a smaller distributor working under a main one'],
+  ['engage with (someone)','to communicate and work with a client or partner'],
+  ['workload','the amount of work you have to do'],
+  ['itinerary','a planned route or schedule for a trip'],
+  ['headquarters (HQ)','the main office of a company'],
+  ['regional meeting','a meeting covering one geographic area'],
+  ['sales call','a visit or meeting with a client to discuss/sell a product'],
+];
+body.innerHTML = `<div class="vocab-grid">${vocabItems.map(v=>`<div class="vocab-item"><div class="term">${v[0]}</div><div class="def">${v[1]}</div></div>`).join('')}</div>`;
+
+// L3 Fill in the Blank
+body = addAccordionSection(lAcc, 3, 'Practice A: Fill in the Blank', 'Complete each sentence with the correct present simple form.');
+buildTextExercise(body, [
+  {prompt:"Every morning, Ahmet ______ (leave) home before rush hour.", accepted:["Every morning, Ahmet leaves home before rush hour"]},
+  {prompt:"He ______ (check) his itinerary before every sales call.", accepted:["He checks his itinerary before every sales call"]},
+  {prompt:"The distributor in Dubai ______ (speak) very quickly on calls.", accepted:["The distributor in Dubai speaks very quickly on calls"]},
+  {prompt:"Everybody ______ (go) to the office by nine o'clock.", accepted:["Everybody goes to the office by nine o'clock"]},
+  {prompt:"I ______ (attend) local meetings more often than international ones.", accepted:["I attend local meetings more often than international ones"]},
+  {prompt:"Traffic in Istanbul ______ (get) worse every evening.", accepted:["Traffic in Istanbul gets worse every evening"]},
+  {prompt:"We ______ (discuss) sales figures at the regional meeting.", accepted:["We discuss sales figures at the regional meeting"]},
+  {prompt:"She ______ (reply) to emails before she leaves the office.", accepted:["She replies to emails before she leaves the office"]},
+  {prompt:"My manager ______ (visit) the Izmir office twice a month.", accepted:["My manager visits the Izmir office twice a month"]},
+  {prompt:"They ______ (engage) with three sub-distributors in the region.", accepted:["They engage with three sub-distributors in the region"]},
+]);
+
+// L4 Multiple Choice
+body = addAccordionSection(lAcc, 4, 'Practice B: Multiple Choice', 'Choose the correct option.');
+buildMCExercise(body, [
+  {prompt:"Everybody ______ tired after the commute.", options:["get","gets","getting","are getting"], correct:1},
+  {prompt:"He usually ______ his meetings on Mondays.", options:["schedule","schedules","is scheduling","scheduled"], correct:1},
+  {prompt:"I ______ the Dubai office once a month, not every week.", options:["call","calls","am calling","calling"], correct:0},
+  {prompt:"The traffic ______ heavy every single evening.", options:["is","are","be","been"], correct:0},
+  {prompt:"Which is correct?", options:["Anybody go to work by bus.","Everybody goes to work by bus.","Everybody go to work by bus.","Anybody goes to work for bus."], correct:1},
+  {prompt:"She ______ very fast when she's on the phone with clients.", options:["talk","talks","is talk","talking"], correct:1},
+  {prompt:"We ______ our sub-distributors twice a year, in person.", options:["visits","visiting","visit","is visiting"], correct:2},
+  {prompt:"Which sentence describes a routine correctly?", options:["I am getting tired every evening.","I get tired every evening.","I getting tired every evening.","I got tired every evening, usually."], correct:1},
+  {prompt:"Dubai ______ a city, not a country.", options:["are","is","be","were"], correct:1},
+  {prompt:"They ______ regional meetings often, but international ones rarely.", options:["has","have","is having","having"], correct:1},
+]);
+
+// L5 Error Correction
+body = addAccordionSection(lAcc, 5, 'Practice C: Error Correction', 'Each sentence has one error. Type the full corrected sentence.');
+buildTextExercise(body, [
+  {prompt:"Anybody go to the office before eight.", accepted:["Everybody goes to the office before eight"]},
+  {prompt:"He engage with the distributor every month.", accepted:["He engages with the distributor every month"]},
+  {prompt:"I am visiting three hospitals every week, usually.", accepted:["I visit three hospitals every week, usually.","I usually visit three hospitals every week"]},
+  {prompt:"The traffic in istanbul get worse every evening.", accepted:["The traffic in Istanbul gets worse every evening"]},
+  {prompt:"She talk very fast on international calls.", accepted:["She talks very fast on international calls"]},
+  {prompt:"We angage our sub-distrubutor once a month.", accepted:["We engage our sub-distributor once a month"]},
+  {prompt:"Therefore ı am getting tired after the commute.", accepted:["Therefore, I get tired after the commute","Therefore I get tired after the commute"]},
+  {prompt:"They very fast talking during the regional meeting.", accepted:["They talk very quickly during the regional meeting","They talk very fast during the regional meeting"]},
+  {prompt:"My manager visit the Izmir office twice a month.", accepted:["My manager visits the Izmir office twice a month"]},
+  {prompt:"Dubai country have a very fast-paced business culture.", accepted:["Dubai has a very fast-paced business culture"]},
+]);
+
+// L6 Quick Reading & Discussion
+body = addAccordionSection(lAcc, 6, 'Practice D: Quick Reading &amp; Discussion', 'Read the short text, then answer True / False / Not Given.');
+body.innerHTML = `<div class="reading-passage"><p>Mert works as a regional sales coordinator for a medical equipment company based in Ankara. He usually arrives at the office at half past eight, just before the morning traffic gets heavy. Every Monday, he prepares a short report for his manager, summarizing the previous week's client visits. Mert visits hospitals in three different cities, so he spends a lot of time driving between appointments. He says the hardest part of his week is Wednesday, when he has back-to-back meetings with two different distributors — one in the morning and one by video call in the afternoon. Mert doesn't enjoy the paperwork much, but he likes meeting new clients and explaining how the products work. In the evening, he usually calls his team to check that everything is on schedule before he finishes work.</p></div>`;
+const readingExerciseDiv = document.createElement('div');
+body.appendChild(readingExerciseDiv);
+buildMCExercise(readingExerciseDiv, [
+  {prompt:"Mert works for a medical equipment company.", options:["True","False","Not Given"], correct:0},
+  {prompt:"He arrives at the office after the traffic gets heavy.", options:["True","False","Not Given"], correct:1},
+  {prompt:"He has worked at the company for five years.", options:["True","False","Not Given"], correct:2},
+  {prompt:"Mert visits hospitals in only one city.", options:["True","False","Not Given"], correct:1},
+  {prompt:"His Wednesday afternoon meeting is a video call.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Mert prefers paperwork to meeting clients.", options:["True","False","Not Given"], correct:1},
+]);
+
+// L7 Guided Speaking
+body = addAccordionSection(lAcc, 7, 'Practice E: Guided Speaking', 'Discuss with your teacher — speak your answers aloud, no need to type.');
+body.innerHTML = `<div class="speak-list"><p class="speak-note">This section is done live in the lesson — talk through it with your teacher.</p>
+  <ol>
+    <li>Describe your own commute — what's the most difficult part?</li>
+    <li>How many meetings do you usually have in a normal week?</li>
+    <li>Do you prefer local meetings or international calls? Why?</li>
+    <li>Tell your teacher about the last time traffic made you late.</li>
+    <li>What's one part of your routine you'd like to change?</li>
+  </ol></div>`;
+
+// L8 Wrap-up quick check
+body = addAccordionSection(lAcc, 8, 'Wrap-Up: Quick Check', 'Five quick questions to confirm today\'s grammar before you go.');
+buildMCExercise(body, [
+  {prompt:"Which is correct?", options:["Everybody go to the meeting.","Everybody goes to the meeting."], correct:1},
+  {prompt:"She ______ (visit) two hospitals every day.", options:["visit","visits","visiting","is visit"], correct:1},
+  {prompt:"Traffic ______ worse every evening.", options:["is","are","be","been"], correct:0},
+  {prompt:"Which sentence uses present simple correctly for a routine?", options:["I am attending meetings often.","I attend meetings often."], correct:1},
+  {prompt:"Dubai is a ______, not a country.", options:["city","town","state","region only"], correct:0},
+]);
+
+/* =========================================================
+   HOMEWORK TAB — 8 sections (mirrors lesson structure)
+   ========================================================= */
+const hAcc = 'hw-accordion';
+
+// H1 Grammar Review
+body = addAccordionSection(hAcc, 1, 'Grammar Review: Present Simple &amp; Agreement', 'A quick recap before you practice.', true);
+body.innerHTML = `<p>Remember: for routines and habits, use <strong>present simple</strong>. With <em>he / she / it / everybody</em>, add <strong>-s</strong> to the verb.</p>
+  <table class="rule">
+    <tr><td class="eg">Everybody goes to the office by nine.</td></tr>
+    <tr><td class="eg">He engages with clients every week.</td></tr>
+    <tr><td class="eg">I get tired after a long commute.</td></tr>
+  </table>`;
+
+// H2 Vocabulary Review
+body = addAccordionSection(hAcc, 2, 'Vocabulary Review', 'This week\'s terms, plus two new ones.');
+const hwVocab = [...vocabItems, ['punctual','arriving or doing something at the right time'], ['on schedule','happening at the planned time']];
+body.innerHTML = `<div class="vocab-grid">${hwVocab.map(v=>`<div class="vocab-item"><div class="term">${v[0]}</div><div class="def">${v[1]}</div></div>`).join('')}</div>`;
+
+// H3 Fill in the Blank
+body = addAccordionSection(hAcc, 3, 'Practice A: Fill in the Blank', 'Complete each sentence with the correct present simple form.');
+buildTextExercise(body, [
+  {prompt:"My colleague ______ (drive) to work every day.", accepted:["My colleague drives to work every day"]},
+  {prompt:"The sales team ______ (meet) every Friday afternoon.", accepted:["The sales team meets every Friday afternoon"]},
+  {prompt:"I ______ (send) my report before six o'clock.", accepted:["I send my report before six o'clock"]},
+  {prompt:"He ______ (call) the distributor twice a week.", accepted:["He calls the distributor twice a week"]},
+  {prompt:"Everybody ______ (arrive) on time for the Monday meeting.", accepted:["Everybody arrives on time for the Monday meeting"]},
+  {prompt:"We ______ (check) our schedule every morning.", accepted:["We check our schedule every morning"]},
+  {prompt:"She ______ (prepare) her presentation the night before.", accepted:["She prepares her presentation the night before"]},
+  {prompt:"The office ______ (open) at eight o'clock.", accepted:["The office opens at eight o'clock"]},
+  {prompt:"They ______ (discuss) new products at every meeting.", accepted:["They discuss new products at every meeting"]},
+  {prompt:"My manager ______ (review) our numbers every month.", accepted:["My manager reviews our numbers every month"]},
+]);
+
+// H4 Multiple Choice
+body = addAccordionSection(hAcc, 4, 'Practice B: Multiple Choice', 'Choose the correct option.');
+buildMCExercise(body, [
+  {prompt:"He ______ his emails first thing every morning.", options:["check","checks","checking","is check"], correct:1},
+  {prompt:"We ______ our clients twice a year, in person.", options:["visits","visiting","visit","is visiting"], correct:2},
+  {prompt:"Which is correct?", options:["Everybody attend the training.","Everybody attends the training.","Everybody attending the training.","Everybody are attend the training."], correct:1},
+  {prompt:"The train ______ crowded every morning.", options:["is","are","be","been"], correct:0},
+  {prompt:"She ______ new products very well.", options:["explain","explains","explaining","is explains"], correct:1},
+  {prompt:"They ______ on schedule most weeks.", options:["stays","stay","staying","is stay"], correct:1},
+  {prompt:"Which sentence is correct?", options:["I am usually finishing at six.","I usually finish at six.","I usually finishing at six.","I usually finished at six, always."], correct:1},
+  {prompt:"My colleague ______ very punctual.", options:["are","is","be","been"], correct:1},
+  {prompt:"He ______ three cities every month for work.", options:["visit","visiting","visits","is visit"], correct:2},
+  {prompt:"We ______ our progress every Friday.", options:["review","reviews","reviewing","is review"], correct:0},
+]);
+
+// H5 Error Correction
+body = addAccordionSection(hAcc, 5, 'Practice C: Error Correction', 'Each sentence has one error. Type the full corrected sentence.');
+buildTextExercise(body, [
+  {prompt:"My colleague drive to work every day.", accepted:["My colleague drives to work every day"]},
+  {prompt:"Everybody attend the Monday meeting.", accepted:["Everybody attends the Monday meeting"]},
+  {prompt:"She explain the product very clearly.", accepted:["She explains the product very clearly"]},
+  {prompt:"We is checking our schedule every morning.", accepted:["We check our schedule every morning"]},
+  {prompt:"He usually finishing at six o'clock.", accepted:["He usually finishes at six o'clock"]},
+  {prompt:"The office open at eight o'clock.", accepted:["The office opens at eight o'clock"]},
+  {prompt:"They discusses new products every week.", accepted:["They discuss new products every week"]},
+  {prompt:"My manager are very punctual.", accepted:["My manager is very punctual"]},
+  {prompt:"I sends my report before six.", accepted:["I send my report before six"]},
+  {prompt:"Anybody visit three cities a month.", accepted:["Everybody visits three cities a month"]},
+]);
+
+// H6 Sentence Transformation
+body = addAccordionSection(hAcc, 6, 'Practice D: Sentence Transformation', 'Rewrite each sentence as instructed, keeping the same meaning.');
+buildTextExercise(body, [
+  {prompt:"Rewrite in present simple: 'My colleague is driving to work every day, usually.'", accepted:["My colleague usually drives to work every day"]},
+  {prompt:"Fix the agreement: 'Everybody attend the meeting on Monday.'", accepted:["Everybody attends the meeting on Monday"]},
+  {prompt:"Rewrite using 'punctual': 'He always arrives on time.'", accepted:["He is always punctual"]},
+  {prompt:"Correct the tense: 'The office is opening at eight every day.'", accepted:["The office opens at eight every day"]},
+  {prompt:"Rewrite as a routine: 'We are reviewing our numbers every month.'", accepted:["We review our numbers every month"]},
+  {prompt:"Fix the sentence: 'She explain the product very well.'", accepted:["She explains the product very well"]},
+  {prompt:"Rewrite using 'on schedule': 'Everything is happening at the right time.'", accepted:["Everything is on schedule"]},
+  {prompt:"Correct the agreement: 'My manager are very organized.'", accepted:["My manager is very organized"]},
+  {prompt:"Rewrite in present simple: 'They are discussing new products every week, usually.'", accepted:["They usually discuss new products every week"]},
+  {prompt:"Fix the error: 'Anybody call the distributor on Fridays.'", accepted:["Everybody calls the distributor on Fridays"]},
+]);
+
+// H7 Reading & Comprehension (longer passage)
+body = addAccordionSection(hAcc, 7, 'Practice E: Reading &amp; Comprehension', 'Read the text, then answer True / False / Not Given.');
+body.innerHTML = `<div class="reading-passage">
+  <p>Elif works as a medical sales representative for a pharmaceutical company in Izmir. She starts her day early, before rush hour, because the roads become very crowded after eight o'clock. Every morning she checks her itinerary and visits two or three hospitals in her region. On Tuesdays, she has a regional meeting at headquarters, and once a month she joins a call with the company's distributor in Germany. Elif says the international calls are difficult sometimes, because her German colleagues speak very quickly and use technical words she doesn't always know.</p>
+  <p>Besides her regular hospital visits, Elif is responsible for training two junior sales reps who joined the company last year. She spends Thursday afternoons reviewing their reports and giving feedback on their client meetings. She admits this part of her job took time to get used to, because explaining a task clearly in a second language is harder than doing the task herself. Elif has started keeping a small notebook of useful phrases she hears in meetings, which she reviews on the weekend. In the evening, she usually replies to emails before she goes home, and once a week she prepares a short summary for her manager. She says the traffic on the way back is still the most tiring part of her day, but she has learned to use that time to plan tomorrow's schedule instead of feeling frustrated.</p>
+</div>`;
+const hwReadingDiv = document.createElement('div');
+body.appendChild(hwReadingDiv);
+buildMCExercise(hwReadingDiv, [
+  {prompt:"Elif starts work after rush hour, once the roads are busy.", options:["True","False","Not Given"], correct:1},
+  {prompt:"She visits two or three hospitals most mornings.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Her regional meeting happens every Tuesday.", options:["True","False","Not Given"], correct:0},
+  {prompt:"She has an international call with Germany every week.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Elif trains two junior sales reps.", options:["True","False","Not Given"], correct:0},
+  {prompt:"She reviews their reports on Thursday mornings.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Elif finds explaining tasks in a second language easy.", options:["True","False","Not Given"], correct:1},
+  {prompt:"She keeps a notebook of useful phrases.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Elif sends a summary to her manager every day.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Elif has decided to look for a new job.", options:["True","False","Not Given"], correct:2},
+]);
+
+// H8 Free Writing & Speaking
+body = addAccordionSection(hAcc, 8, 'Free Writing &amp; Speaking', 'Write it, then say it — for your teacher to review.');
+body.innerHTML = `
+  <div class="voice-note-box"><strong>Two steps, not one:</strong> First, write your answer in the box below. Once you've finished writing, record a short voice note (1–2 minutes) reading or explaining what you wrote, and send it to your teacher via WhatsApp. Your writing practice is also your speaking practice this week — don't skip the voice note.</div>
+  <div class="exercise">
+    <p class="q">Describe your busiest day of the week at work. What makes it busier than other days, and how do you usually manage it? Use present simple, and try to use at least three words from this week's vocabulary.</p>
+    <textarea placeholder="Start writing here..."></textarea>
+  </div>`;
+</script>
+</body>
+</html>

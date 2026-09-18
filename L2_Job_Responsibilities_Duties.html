@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 2 — Job Responsibilities &amp; Duties</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F5FA;
+    --paper:#FFFFFF;
+    --ink:#16264F;
+    --body:#3B4560;
+    --muted:#6B7290;
+    --accent:#2A4FA0;
+    --accent-dark:#1D3A7D;
+    --warm:#A9782F;
+    --line:#DCE1EE;
+    --correct:#1F7A3D;
+    --correct-bg:#EAF4EC;
+    --incorrect:#B3261E;
+    --incorrect-bg:#FBEAEA;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--body);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .page{max-width:780px;margin:0 auto;padding:40px 24px 120px;}
+  h1,h2,h3{font-family:'Lora',serif;color:var(--ink);margin:0;}
+
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:24px;margin-bottom:20px;}
+  .masthead .phase{color:var(--warm);font-size:14px;font-weight:600;}
+  .masthead h1{font-size:32px;font-weight:700;margin-top:6px;line-height:1.2;}
+  .masthead .meta{color:var(--muted);font-size:14px;margin-top:10px;}
+
+  .orientation{margin:0 0 24px;font-size:15.5px;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--accent);padding:16px 20px;}
+  .orientation strong{color:var(--ink);}
+
+  .tabs-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px;}
+  .tab-btn{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;padding:12px 26px;border:none;color:#fff;cursor:pointer;opacity:0.5;transition:opacity 0.2s ease;}
+  .tab-btn.active{opacity:1;}
+  .tab-btn.lesson-btn{background:var(--ink);}
+  .tab-btn.hw-btn{background:var(--warm);}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .accordion-item{border-top:1px solid var(--line);}
+  .accordion-item:last-child{border-bottom:1px solid var(--line);}
+  .accordion-header{display:flex;align-items:center;gap:14px;padding:20px 4px;cursor:pointer;user-select:none;background:none;border:none;width:100%;text-align:left;}
+  .accordion-header .num{font-family:'Lora',serif;font-size:15px;color:var(--accent);font-weight:600;flex:none;width:18px;}
+  .accordion-header .htext{flex:1;}
+  .accordion-header h2{font-size:20px;}
+  .accordion-header .sub{color:var(--muted);font-size:13.5px;margin-top:3px;}
+  .accordion-header .chev{flex:none;color:var(--muted);transition:transform 0.3s ease;font-size:18px;}
+  .accordion-item.open .chev{transform:rotate(180deg);}
+
+  .accordion-panel{display:none;}
+  .accordion-item.open .accordion-panel{display:block;}
+  .accordion-panel-inner{overflow:hidden;}
+  .accordion-body{padding:4px 4px 28px 32px;}
+
+  .callout{background:var(--paper);border-left:3px solid var(--warm);padding:14px 18px;margin:16px 0;font-size:15px;}
+  .callout strong{color:var(--ink);}
+
+  table.rule{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px;background:var(--paper);}
+  table.rule th,table.rule td{border:1px solid var(--line);padding:9px 12px;text-align:left;}
+  table.rule th{background:#E9EEF9;color:var(--ink);font-weight:600;}
+  table.rule td.eg{color:var(--accent-dark);font-style:italic;}
+
+  .vocab-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin:16px 0;}
+  @media (max-width:560px){.vocab-grid{grid-template-columns:1fr;}}
+  .vocab-item{background:var(--paper);border:1px solid var(--line);padding:11px 15px;}
+  .vocab-item .term{font-weight:600;color:var(--ink);font-size:14.5px;}
+  .vocab-item .def{font-size:13.5px;color:var(--muted);margin-top:2px;}
+
+  .exercise{background:var(--paper);border:1px solid var(--line);padding:20px 22px;margin:14px 0 0;}
+  .q{margin-bottom:16px;}
+  .q:last-child{margin-bottom:0;}
+  .q .prompt{font-size:14.5px;color:var(--ink);margin-bottom:7px;}
+  .q .prompt .n{color:var(--muted);margin-right:5px;}
+  .q input[type=text]{width:100%;max-width:420px;padding:8px 10px;font-size:14.5px;font-family:'Inter',sans-serif;border:1px solid #C7CCC4;background:#FBFBFA;color:var(--ink);}
+  .q input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .choices{display:flex;flex-direction:column;gap:7px;margin-top:5px;}
+  .choice{display:flex;align-items:center;gap:8px;font-size:14.5px;cursor:pointer;}
+  .feedback{font-size:13px;margin-top:5px;display:none;padding:3px 0;}
+  .feedback.show{display:block;}
+  .feedback.correct{color:var(--correct);}
+  .feedback.incorrect{color:var(--incorrect);}
+  .q.correct input[type=text]{background:var(--correct-bg);border-color:var(--correct);color:var(--correct);}
+  .q.incorrect input[type=text]{background:var(--incorrect-bg);border-color:var(--incorrect);color:var(--incorrect);}
+  .choice.correct-choice{color:var(--correct);font-weight:600;}
+  .choice.incorrect-choice{color:var(--incorrect);text-decoration:line-through;}
+
+  .exercise-actions{display:flex;gap:10px;margin-top:18px;}
+  button.check,button.reset{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;padding:8px 16px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;}
+  button.reset{background:transparent;color:var(--ink);}
+  button.check:hover{background:var(--accent-dark);border-color:var(--accent-dark);}
+  button.reset:hover{background:#EEF1EC;}
+  .score{font-size:13.5px;color:var(--muted);margin-top:10px;display:none;}
+  .score.show{display:block;}
+  .score b{color:var(--ink);}
+
+  .reading-passage{background:#FBFBFA;border:1px solid var(--line);padding:16px 18px;font-size:14.5px;margin-bottom:14px;}
+  .reading-passage p{margin:0 0 10px;}
+  .reading-passage p:last-child{margin-bottom:0;}
+
+  textarea{width:100%;min-height:150px;padding:12px 14px;font-family:'Inter',sans-serif;font-size:14.5px;border:1px solid #C7CCC4;background:#FBFBFA;color:var(--ink);resize:vertical;}
+  textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+
+  .voice-note-box{background:#FBF6EA;border:1px solid #E8D9AF;padding:14px 18px;margin-bottom:16px;font-size:14.5px;color:var(--ink);}
+  .voice-note-box strong{color:var(--warm);}
+
+  .speak-list{background:var(--paper);border:1px solid var(--line);padding:18px 22px;}
+  .speak-list ol{margin:0;padding-left:20px;}
+  .speak-list li{margin-bottom:10px;font-size:14.5px;}
+  .speak-list li:last-child{margin-bottom:0;}
+  .speak-note{color:var(--muted);font-size:13.5px;margin-bottom:12px;}
+
+  footer{margin-top:50px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:13px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="phase">Phase 1 — Foundations &amp; Confidence</div>
+    <h1>Lesson 2: Job Responsibilities &amp; Duties</h1>
+    <div class="meta">Ahmet Menteş · Business English · Lesson ~50 min · Homework ~40 min</div>
+  </div>
+
+  <p class="orientation">Today we're contrasting <strong>present simple</strong> (permanent, routine duties) with <strong>present continuous</strong> (temporary situations happening now, this week, or this month) — using your real responsibilities and any extra or temporary work you're covering. Work through the <strong>Lesson</strong> tab with your teacher first (grammar, vocabulary, practice, reading, speaking), then use the <strong>Homework</strong> tab to consolidate on your own during the week.</p>
+
+  <div class="tabs-bar">
+    <button class="tab-btn lesson-btn active" id="tab-lesson-btn">Lesson</button>
+    <button class="tab-btn hw-btn" id="tab-hw-btn">Homework</button>
+  </div>
+
+  <div class="view active" id="lesson-view">
+    <div class="accordion" id="lesson-accordion"></div>
+  </div>
+
+  <div class="view" id="homework-view">
+    <div class="accordion" id="hw-accordion"></div>
+  </div>
+
+  <footer>Lesson 2 of 36 · Phase 1: Foundations &amp; Confidence · Prepared for Ahmet Menteş</footer>
+</div>
+
+<script>
+/* ---------------- Tab switching ---------------- */
+const lessonView = document.getElementById('lesson-view');
+const hwView = document.getElementById('homework-view');
+const tabLessonBtn = document.getElementById('tab-lesson-btn');
+const tabHwBtn = document.getElementById('tab-hw-btn');
+function showLesson(){ lessonView.classList.add('active'); hwView.classList.remove('active'); tabLessonBtn.classList.add('active'); tabHwBtn.classList.remove('active'); window.scrollTo({top:0}); }
+function showHomework(){ hwView.classList.add('active'); lessonView.classList.remove('active'); tabHwBtn.classList.add('active'); tabLessonBtn.classList.remove('active'); window.scrollTo({top:0}); }
+tabLessonBtn.addEventListener('click', showLesson);
+tabHwBtn.addEventListener('click', showHomework);
+
+/* ---------------- Accordion builder ---------------- */
+function addAccordionSection(containerId, num, title, subtitle, openByDefault){
+  const container = document.getElementById(containerId);
+  const item = document.createElement('div');
+  item.className = 'accordion-item' + (openByDefault ? ' open' : '');
+  item.innerHTML = `
+    <button class="accordion-header">
+      <span class="num">${num}</span>
+      <span class="htext"><h2>${title}</h2><div class="sub">${subtitle}</div></span>
+      <span class="chev">⌄</span>
+    </button>
+    <div class="accordion-panel"><div class="accordion-panel-inner"><div class="accordion-body"></div></div></div>
+  `;
+  container.appendChild(item);
+  item.querySelector('.accordion-header').addEventListener('click', () => { item.classList.toggle('open'); });
+  return item.querySelector('.accordion-body');
+}
+
+/* ---------------- Exercise helpers ---------------- */
+function norm(s){ return s.toLowerCase().trim().replace(/[.!?,;:'"]/g,'').replace(/\s+/g,' '); }
+function matches(input, accepted){ const n = norm(input); return accepted.some(a => norm(a) === n); }
+
+function buildTextExercise(container, items){
+  const wrap = document.createElement('div'); wrap.className = 'exercise';
+  items.forEach((item, i) => {
+    const qDiv = document.createElement('div'); qDiv.className = 'q';
+    qDiv.innerHTML = `<div class="prompt"><span class="n">${i+1}.</span>${item.prompt}</div>
+      <input type="text" autocomplete="off" spellcheck="false"><div class="feedback"></div>`;
+    wrap.appendChild(qDiv);
+  });
+  const actions = document.createElement('div'); actions.className = 'exercise-actions';
+  actions.innerHTML = `<button class="check">Check Answers</button><button class="reset">Reset</button>`;
+  wrap.appendChild(actions);
+  const scoreEl = document.createElement('div'); scoreEl.className = 'score'; wrap.appendChild(scoreEl);
+  actions.querySelector('.check').addEventListener('click', () => {
+    let c = 0;
+    wrap.querySelectorAll('.q').forEach((qDiv, i) => {
+      const input = qDiv.querySelector('input'); const fb = qDiv.querySelector('.feedback');
+      const ok = matches(input.value, items[i].accepted);
+      qDiv.classList.remove('correct','incorrect'); qDiv.classList.add(ok ? 'correct' : 'incorrect');
+      fb.classList.add('show');
+      if(ok){ c++; fb.className='feedback show correct'; fb.textContent='✓ Correct'; }
+      else { fb.className='feedback show incorrect'; fb.textContent=`✗ Correct answer: ${items[i].accepted[0]}`; }
+    });
+    scoreEl.classList.add('show'); scoreEl.innerHTML = `Score: <b>${c} / ${items.length}</b>`;
+  });
+  actions.querySelector('.reset').addEventListener('click', () => {
+    wrap.querySelectorAll('.q').forEach(qDiv => { qDiv.classList.remove('correct','incorrect'); qDiv.querySelector('input').value=''; qDiv.querySelector('.feedback').classList.remove('show'); });
+    scoreEl.classList.remove('show');
+  });
+  container.appendChild(wrap);
+}
+
+let uidCounter = 0;
+function uid(){ return uidCounter++; }
+
+function buildMCExercise(container, items){
+  const exId = uid();
+  const wrap = document.createElement('div'); wrap.className = 'exercise';
+  items.forEach((item, i) => {
+    const qDiv = document.createElement('div'); qDiv.className = 'q';
+    const choicesHtml = item.options.map((opt,j) => `<label class="choice"><input type="radio" name="mc-${exId}-${i}" value="${j}"><span>${opt}</span></label>`).join('');
+    qDiv.innerHTML = `<div class="prompt"><span class="n">${i+1}.</span>${item.prompt}</div><div class="choices">${choicesHtml}</div><div class="feedback"></div>`;
+    wrap.appendChild(qDiv);
+  });
+  const actions = document.createElement('div'); actions.className = 'exercise-actions';
+  actions.innerHTML = `<button class="check">Check Answers</button><button class="reset">Reset</button>`;
+  wrap.appendChild(actions);
+  const scoreEl = document.createElement('div'); scoreEl.className = 'score'; wrap.appendChild(scoreEl);
+  actions.querySelector('.check').addEventListener('click', () => {
+    let c = 0;
+    wrap.querySelectorAll('.q').forEach((qDiv, i) => {
+      const selected = qDiv.querySelector('input[type=radio]:checked');
+      const fb = qDiv.querySelector('.feedback');
+      const labels = qDiv.querySelectorAll('.choice');
+      labels.forEach(l => l.classList.remove('correct-choice','incorrect-choice'));
+      const correctIdx = items[i].correct;
+      labels[correctIdx].classList.add('correct-choice');
+      fb.classList.add('show');
+      if(selected && parseInt(selected.value) === correctIdx){ c++; fb.className='feedback show correct'; fb.textContent='✓ Correct'; }
+      else { if(selected) labels[parseInt(selected.value)].classList.add('incorrect-choice'); fb.className='feedback show incorrect'; fb.textContent = selected ? '✗ Not quite — correct answer highlighted above' : '✗ No answer selected — correct answer highlighted above'; }
+    });
+    scoreEl.classList.add('show'); scoreEl.innerHTML = `Score: <b>${c} / ${items.length}</b>`;
+  });
+  actions.querySelector('.reset').addEventListener('click', () => {
+    wrap.querySelectorAll('.q').forEach(qDiv => { qDiv.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false); qDiv.querySelectorAll('.choice').forEach(l=>l.classList.remove('correct-choice','incorrect-choice')); qDiv.querySelector('.feedback').classList.remove('show'); });
+    scoreEl.classList.remove('show');
+  });
+  container.appendChild(wrap);
+}
+
+/* =========================================================
+   LESSON TAB — 8 sections
+   ========================================================= */
+const lAcc = 'lesson-accordion';
+
+let body = addAccordionSection(lAcc, 1, 'Grammar Focus: Present Simple vs. Present Continuous', 'Permanent duties vs. temporary situations', true);
+body.innerHTML = `
+  <p>Use <strong>present simple</strong> for permanent, routine responsibilities — what's always true about your job. Use <strong>present continuous</strong> for temporary situations happening now, this week, this month, or around the present time.</p>
+  <table class="rule">
+    <tr><th>Tense</th><th>Time markers</th><th>Example</th></tr>
+    <tr><td>Present simple</td><td>always, usually, every day, normally, in general</td><td class="eg">I handle key accounts in the Aegean region.</td></tr>
+    <tr><td>Present continuous</td><td>now, at the moment, currently, this week/month, these days</td><td class="eg">This month, I am covering my colleague's territory.</td></tr>
+  </table>
+  <div class="callout"><strong>Watch out:</strong> "these days" and "this month" usually signal something <em>temporary</em> → continuous, even though they might sound like routine markers.</div>
+  <table class="rule">
+    <tr><th>❌ Wrong tense for the situation</th><th>✅ Correct</th></tr>
+    <tr><td class="eg">He oversee the sales team's targets.</td><td class="eg">He oversees the sales team's targets.</td></tr>
+    <tr><td class="eg">Currently, they train two new reps.</td><td class="eg">Currently, they are training two new reps.</td></tr>
+  </table>`;
+
+body = addAccordionSection(lAcc, 2, 'Vocabulary: Job Responsibilities &amp; Duties', 'Terms for describing what you do');
+const vocabItems = [
+  ['responsible for','having a duty to deal with something'],
+  ['in charge of','having control or command over something'],
+  ['handle','to deal with or manage a task or situation'],
+  ['oversee','to supervise a task, project, or team'],
+  ['deal with','to take action to solve a problem or situation'],
+  ['cover for (someone)','to do someone else\'s job while they\'re away'],
+  ['day-to-day tasks','the regular, ordinary work you do each day'],
+  ['key account','an important client that generates significant business'],
+  ['target / quota','a goal you must reach, often a sales number'],
+  ['follow up (with someone)','to check on progress or continue a conversation later'],
+];
+body.innerHTML = `<div class="vocab-grid">${vocabItems.map(v=>`<div class="vocab-item"><div class="term">${v[0]}</div><div class="def">${v[1]}</div></div>`).join('')}</div>`;
+
+body = addAccordionSection(lAcc, 3, 'Practice A: Fill in the Blank', 'Choose present simple or continuous based on the time clue.');
+buildTextExercise(body, [
+  {prompt:"Normally, I ______ (handle) three key accounts.", accepted:["Normally, I handle three key accounts"]},
+  {prompt:"At the moment, I ______ (cover) for a colleague who is on leave.", accepted:["At the moment, I am covering for a colleague who is on leave"]},
+  {prompt:"She ______ (manage) the Izmir office every day.", accepted:["She manages the Izmir office every day"]},
+  {prompt:"This month, we ______ (deal with) a difficult client complaint.", accepted:["This month, we are dealing with a difficult client complaint","This month we are dealing with a difficult client complaint"]},
+  {prompt:"He usually ______ (oversee) the sales team's targets.", accepted:["He usually oversees the sales team's targets"]},
+  {prompt:"Currently, they ______ (train) two new sales reps.", accepted:["Currently, they are training two new sales reps"]},
+  {prompt:"I ______ (follow up) with clients every Friday, as a rule.", accepted:["I follow up with clients every Friday, as a rule"]},
+  {prompt:"These days, I ______ (work) on a special project for headquarters.", accepted:["These days, I am working on a special project for headquarters"]},
+  {prompt:"She ______ (report) to the regional manager, in general.", accepted:["She reports to the regional manager, in general"]},
+  {prompt:"Right now, he ______ (prepare) a presentation for tomorrow.", accepted:["Right now, he is preparing a presentation for tomorrow"]},
+]);
+
+body = addAccordionSection(lAcc, 4, 'Practice B: Multiple Choice', 'Choose the correct option.');
+buildMCExercise(body, [
+  {prompt:"Which describes a permanent duty?", options:["I am handling three accounts.","I handle three accounts."], correct:1},
+  {prompt:"This month, she ______ two territories.", options:["covers","is covering","cover","covered"], correct:1},
+  {prompt:"He usually ______ the sales team.", options:["oversee","oversees","is overseeing","oversaw"], correct:1},
+  {prompt:"Which uses continuous correctly for something temporary?", options:["These days, I am training a new assistant.","These days, I train a new assistant."], correct:0},
+  {prompt:"I ______ with clients every Friday, as a rule.", options:["follow up","am following up","follows up","followed up"], correct:0},
+  {prompt:"At the moment, they ______ a new CRM system.", options:["test","tests","are testing","tested"], correct:2},
+  {prompt:"Which is correct?", options:["He is reporting to the regional manager, in general.","He reports to the regional manager, in general."], correct:1},
+  {prompt:"Currently, we ______ short-staffed.", options:["are","is","be","been"], correct:0},
+  {prompt:"She ______ in charge of the Aegean region.", options:["is","are","be","being"], correct:0},
+  {prompt:"Right now, he ______ a presentation.", options:["prepare","prepares","is preparing","prepared"], correct:2},
+]);
+
+body = addAccordionSection(lAcc, 5, 'Practice C: Error Correction', 'Each sentence has one error. Type the full corrected sentence.');
+buildTextExercise(body, [
+  {prompt:"I am handling three accounts, usually.", accepted:["I handle three accounts, usually.","I usually handle three accounts"]},
+  {prompt:"She manage the Izmir office every day.", accepted:["She manages the Izmir office every day"]},
+  {prompt:"This month, we deal with a difficult client complaint.", accepted:["This month, we are dealing with a difficult client complaint","This month we are dealing with a difficult client complaint"]},
+  {prompt:"He oversee the sales team's targets.", accepted:["He oversees the sales team's targets"]},
+  {prompt:"Currently, they train two new sales reps.", accepted:["Currently, they are training two new sales reps"]},
+  {prompt:"I am following up with clients every Friday, as a rule.", accepted:["I follow up with clients every Friday, as a rule"]},
+  {prompt:"These days, I work on a special project for headquarters.", accepted:["These days, I am working on a special project for headquarters"]},
+  {prompt:"She report to the regional manager, in general.", accepted:["She reports to the regional manager, in general"]},
+  {prompt:"Right now, he prepares a presentation for tomorrow.", accepted:["Right now, he is preparing a presentation for tomorrow"]},
+  {prompt:"He is oversee two teams this quarter.", accepted:["He is overseeing two teams this quarter"]},
+]);
+
+body = addAccordionSection(lAcc, 6, 'Practice D: Quick Reading &amp; Discussion', 'Read the short text, then answer True / False / Not Given.');
+body.innerHTML = `<div class="reading-passage"><p>Deniz works as a territory manager for a medical devices company. Normally, he looks after hospitals in the Marmara region and reports directly to the sales director. He usually spends Mondays in the office and the rest of the week visiting clients. This month, however, Deniz is also covering the Aegean region, because his colleague is on parental leave. He says it's a lot of extra driving, but he doesn't mind, because he's learning about new hospitals and building new relationships. At the moment, he is also training a new junior rep who joined the team in September. Deniz usually prefers working independently, but this month he's enjoying being a mentor. He expects to go back to just his own region in December.</p></div>`;
+const lReadDiv = document.createElement('div'); body.appendChild(lReadDiv);
+buildMCExercise(lReadDiv, [
+  {prompt:"Deniz normally works in the Aegean region.", options:["True","False","Not Given"], correct:1},
+  {prompt:"This month he is covering an extra region.", options:["True","False","Not Given"], correct:0},
+  {prompt:"His colleague is on sick leave.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Deniz has worked at the company for ten years.", options:["True","False","Not Given"], correct:2},
+  {prompt:"He is training a new junior rep at the moment.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Deniz will go back to just his own region in December.", options:["True","False","Not Given"], correct:0},
+]);
+
+body = addAccordionSection(lAcc, 7, 'Practice E: Guided Speaking', 'Discuss with your teacher — speak your answers aloud, no need to type.');
+body.innerHTML = `<div class="speak-list"><p class="speak-note">This section is done live in the lesson — talk through it with your teacher.</p>
+  <ol>
+    <li>What are your permanent responsibilities at work?</li>
+    <li>Is there anything different or temporary you're working on this month?</li>
+    <li>Do you prefer routine tasks or new projects? Why?</li>
+    <li>Who do you report to, and how often do you update them?</li>
+    <li>Tell your teacher about a time you covered someone else's work.</li>
+  </ol></div>`;
+
+body = addAccordionSection(lAcc, 8, 'Wrap-Up: Quick Check', 'Five quick questions to confirm today\'s grammar before you go.');
+buildMCExercise(body, [
+  {prompt:"Which is correct for a permanent duty?", options:["I am managing three key accounts.","I manage three key accounts."], correct:1},
+  {prompt:"This week, we ______ a new client.", options:["onboard","onboards","are onboarding","onboarded"], correct:2},
+  {prompt:"She usually ______ the team.", options:["lead","leads","is leading","led"], correct:1},
+  {prompt:"At the moment, he ______ a report.", options:["write","writes","is writing","wrote"], correct:2},
+  {prompt:"Which time marker usually signals present continuous?", options:["always","every day","this month","usually"], correct:2},
+]);
+
+/* =========================================================
+   HOMEWORK TAB — 8 sections
+   ========================================================= */
+const hAcc = 'hw-accordion';
+
+body = addAccordionSection(hAcc, 1, 'Grammar Review: Present Simple vs. Continuous', 'A quick recap before you practice.', true);
+body.innerHTML = `<p>Remember: <strong>present simple</strong> = permanent/routine duties. <strong>Present continuous</strong> = temporary situations happening now, this week, or this month.</p>
+  <table class="rule">
+    <tr><td class="eg">I handle key accounts in the Aegean region.</td></tr>
+    <tr><td class="eg">This month, I am covering for a colleague.</td></tr>
+  </table>`;
+
+body = addAccordionSection(hAcc, 2, 'Vocabulary Review', 'This week\'s terms, plus two new ones.');
+const hwVocab = [...vocabItems, ['hand over (something)','to give a task or responsibility to someone else'], ['on top of (something)','in addition to your normal work']];
+body.innerHTML = `<div class="vocab-grid">${hwVocab.map(v=>`<div class="vocab-item"><div class="term">${v[0]}</div><div class="def">${v[1]}</div></div>`).join('')}</div>`;
+
+body = addAccordionSection(hAcc, 3, 'Practice A: Fill in the Blank', 'Choose present simple or continuous based on the time clue.');
+buildTextExercise(body, [
+  {prompt:"My assistant ______ (organize) my calendar every week.", accepted:["My assistant organizes my calendar every week"]},
+  {prompt:"This week, I ______ (handle) two extra accounts.", accepted:["This week, I am handling two extra accounts","This week I am handling two extra accounts"]},
+  {prompt:"He ______ (report) to headquarters every month.", accepted:["He reports to headquarters every month"]},
+  {prompt:"Currently, she ______ (cover) for the regional manager.", accepted:["Currently, she is covering for the regional manager"]},
+  {prompt:"We usually ______ (follow up) within 48 hours.", accepted:["We usually follow up within 48 hours"]},
+  {prompt:"At the moment, they ______ (test) a new ordering system.", accepted:["At the moment, they are testing a new ordering system"]},
+  {prompt:"My manager ______ (oversee) five territories, in general.", accepted:["My manager oversees five territories, in general"]},
+  {prompt:"These days, I ______ (train) a new colleague.", accepted:["These days, I am training a new colleague"]},
+  {prompt:"The team ______ (deal with) client complaints every day.", accepted:["The team deals with client complaints every day"]},
+  {prompt:"Right now, he ______ (prepare) next month's targets.", accepted:["Right now, he is preparing next month's targets"]},
+]);
+
+body = addAccordionSection(hAcc, 4, 'Practice B: Multiple Choice', 'Choose the correct option.');
+buildMCExercise(body, [
+  {prompt:"My assistant ______ my calendar every week.", options:["organize","organizes","is organizing","organized"], correct:1},
+  {prompt:"This week, I ______ two extra accounts.", options:["handle","handles","am handling","handled"], correct:2},
+  {prompt:"Which is correct?", options:["He reports to headquarters every month.","He is reporting to headquarters every month."], correct:0},
+  {prompt:"Currently, she ______ for the regional manager.", options:["cover","covers","is covering","covered"], correct:2},
+  {prompt:"We usually ______ within 48 hours.", options:["follow up","follows up","are following up","followed up"], correct:0},
+  {prompt:"At the moment, they ______ a new ordering system.", options:["test","tests","are testing","tested"], correct:2},
+  {prompt:"My manager ______ five territories, in general.", options:["oversee","oversees","is overseeing","oversaw"], correct:1},
+  {prompt:"Which uses continuous correctly?", options:["These days, I train a new colleague.","These days, I am training a new colleague."], correct:1},
+  {prompt:"The team ______ client complaints every day.", options:["deal with","deals with","is dealing with","dealt with"], correct:1},
+  {prompt:"Right now, he ______ next month's targets.", options:["prepare","prepares","is preparing","prepared"], correct:2},
+]);
+
+body = addAccordionSection(hAcc, 5, 'Practice C: Error Correction', 'Each sentence has one error. Type the full corrected sentence.');
+buildTextExercise(body, [
+  {prompt:"My assistant organize my calendar every week.", accepted:["My assistant organizes my calendar every week"]},
+  {prompt:"This week, I handle two extra accounts.", accepted:["This week, I am handling two extra accounts","This week I am handling two extra accounts"]},
+  {prompt:"He is reporting to headquarters every month.", accepted:["He reports to headquarters every month"]},
+  {prompt:"Currently, she covers for the regional manager.", accepted:["Currently, she is covering for the regional manager"]},
+  {prompt:"We usually follows up within 48 hours.", accepted:["We usually follow up within 48 hours"]},
+  {prompt:"At the moment, they test a new ordering system.", accepted:["At the moment, they are testing a new ordering system"]},
+  {prompt:"My manager oversee five territories, in general.", accepted:["My manager oversees five territories, in general"]},
+  {prompt:"These days, I train a new colleague.", accepted:["These days, I am training a new colleague"]},
+  {prompt:"The team deal with client complaints every day.", accepted:["The team deals with client complaints every day"]},
+  {prompt:"Right now, he prepares next month's targets.", accepted:["Right now, he is preparing next month's targets"]},
+]);
+
+body = addAccordionSection(hAcc, 6, 'Practice D: Sentence Transformation', 'Rewrite each sentence as instructed, keeping the same meaning.');
+buildTextExercise(body, [
+  {prompt:"Rewrite for a permanent duty: 'This week I am handling five accounts, usually.'", accepted:["I usually handle five accounts"]},
+  {prompt:"Rewrite for something temporary happening now: 'She covers the Aegean region every month.'", accepted:["She is currently covering the Aegean region","She is covering the Aegean region currently"]},
+  {prompt:"Correct the tense: 'He is reporting to headquarters every month.'", accepted:["He reports to headquarters every month"]},
+  {prompt:"Rewrite using 'hand over': 'I gave my tasks to my colleague before my holiday.'", accepted:["I handed over my tasks to my colleague before my holiday"]},
+  {prompt:"Rewrite as a routine: 'We are following up with clients every Friday, usually.'", accepted:["We usually follow up with clients every Friday"]},
+  {prompt:"Correct the sentence: 'They tests a new system this month.'", accepted:["They are testing a new system this month"]},
+  {prompt:"Rewrite using 'on top of': 'In addition to my normal work, I am training a new colleague.'", accepted:["On top of my normal work, I am training a new colleague"]},
+  {prompt:"Fix the tense: 'My manager oversee five territories, in general.'", accepted:["My manager oversees five territories, in general"]},
+  {prompt:"Rewrite for now: 'He prepares next month's targets right now.'", accepted:["He is preparing next month's targets right now"]},
+  {prompt:"Correct the agreement: 'The team deal with complaints every day.'", accepted:["The team deals with complaints every day"]},
+]);
+
+body = addAccordionSection(hAcc, 7, 'Practice E: Reading &amp; Comprehension', 'Read the text, then answer True / False / Not Given.');
+body.innerHTML = `<div class="reading-passage">
+  <p>Deniz works as a territory manager for a medical devices company. Normally, he looks after hospitals in the Marmara region and reports directly to the sales director. He usually spends Mondays in the office and the rest of the week visiting clients. This month, however, Deniz is also covering the Aegean region, because his colleague is on parental leave. He says it's a lot of extra driving, but he doesn't mind, because he's learning about new hospitals and building new relationships.</p>
+  <p>At the moment, he is also training a new junior rep who joined the team in September. Deniz usually prefers working independently, but this month he's enjoying being a mentor. He spends Wednesday afternoons showing the new rep how to prepare client presentations and how to follow up after a sales call. Deniz's manager is very happy with his flexibility, and has hinted that a promotion to senior territory manager might be possible next year. For now, though, Deniz is focused on getting through this unusually busy month. He expects to go back to just his own region in December, once his colleague returns from leave. He has already started planning a short holiday for January, once things are calmer.</p>
+</div>`;
+const hwReadDiv = document.createElement('div'); body.appendChild(hwReadDiv);
+buildMCExercise(hwReadDiv, [
+  {prompt:"Deniz normally works in the Aegean region.", options:["True","False","Not Given"], correct:1},
+  {prompt:"This month he is covering an extra region.", options:["True","False","Not Given"], correct:0},
+  {prompt:"His colleague is on sick leave.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Deniz has worked at the company for ten years.", options:["True","False","Not Given"], correct:2},
+  {prompt:"He is training a new junior rep at the moment.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Deniz usually prefers working in a team.", options:["True","False","Not Given"], correct:1},
+  {prompt:"His manager has hinted at a possible promotion.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Deniz will go back to just his own region in December.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Deniz has already booked his January holiday.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Deniz dislikes mentoring the new rep.", options:["True","False","Not Given"], correct:1},
+]);
+
+body = addAccordionSection(hAcc, 8, 'Free Writing &amp; Speaking', 'Write it, then say it — for your teacher to review.');
+body.innerHTML = `
+  <div class="voice-note-box"><strong>Two steps, not one:</strong> First, write your answer in the box below. Once you've finished writing, record a short voice note (1–2 minutes) reading or explaining what you wrote, and send it to your teacher via WhatsApp. Your writing practice is also your speaking practice this week — don't skip the voice note.</div>
+  <div class="exercise">
+    <p class="q">Describe your normal, permanent responsibilities at work. Then describe one thing that's different or temporary that you're currently working on this week or month. Use both present simple and present continuous correctly, and try to use at least three words from this week's vocabulary.</p>
+    <textarea placeholder="Start writing here..."></textarea>
+  </div>`;
+</script>
+</body>
+</html>

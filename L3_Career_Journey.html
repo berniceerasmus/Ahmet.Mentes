@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 3 — Your Career Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F5FA;
+    --paper:#FFFFFF;
+    --ink:#16264F;
+    --body:#3B4560;
+    --muted:#6B7290;
+    --accent:#2A4FA0;
+    --accent-dark:#1D3A7D;
+    --warm:#A9782F;
+    --line:#DCE1EE;
+    --correct:#1F7A3D;
+    --correct-bg:#EAF4EC;
+    --incorrect:#B3261E;
+    --incorrect-bg:#FBEAEA;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--body);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .page{max-width:780px;margin:0 auto;padding:40px 24px 120px;}
+  h1,h2,h3{font-family:'Lora',serif;color:var(--ink);margin:0;}
+
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:24px;margin-bottom:20px;}
+  .masthead .phase{color:var(--warm);font-size:14px;font-weight:600;}
+  .masthead h1{font-size:32px;font-weight:700;margin-top:6px;line-height:1.2;}
+  .masthead .meta{color:var(--muted);font-size:14px;margin-top:10px;}
+
+  .orientation{margin:0 0 24px;font-size:15.5px;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--accent);padding:16px 20px;}
+  .orientation strong{color:var(--ink);}
+
+  .tabs-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px;}
+  .tab-btn{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;padding:12px 26px;border:none;color:#fff;cursor:pointer;opacity:0.5;transition:opacity 0.2s ease;}
+  .tab-btn.active{opacity:1;}
+  .tab-btn.lesson-btn{background:var(--ink);}
+  .tab-btn.hw-btn{background:var(--warm);}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .accordion-item{border-top:1px solid var(--line);}
+  .accordion-item:last-child{border-bottom:1px solid var(--line);}
+  .accordion-header{display:flex;align-items:center;gap:14px;padding:20px 4px;cursor:pointer;user-select:none;background:none;border:none;width:100%;text-align:left;}
+  .accordion-header .num{font-family:'Lora',serif;font-size:15px;color:var(--accent);font-weight:600;flex:none;width:18px;}
+  .accordion-header .htext{flex:1;}
+  .accordion-header h2{font-size:20px;}
+  .accordion-header .sub{color:var(--muted);font-size:13.5px;margin-top:3px;}
+  .accordion-header .chev{flex:none;color:var(--muted);transition:transform 0.3s ease;font-size:18px;}
+  .accordion-item.open .chev{transform:rotate(180deg);}
+
+  .accordion-panel{display:none;}
+  .accordion-item.open .accordion-panel{display:block;}
+  .accordion-panel-inner{overflow:hidden;}
+  .accordion-body{padding:4px 4px 28px 32px;}
+
+  .callout{background:var(--paper);border-left:3px solid var(--warm);padding:14px 18px;margin:16px 0;font-size:15px;}
+  .callout strong{color:var(--ink);}
+
+  table.rule{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px;background:var(--paper);}
+  table.rule th,table.rule td{border:1px solid var(--line);padding:9px 12px;text-align:left;}
+  table.rule th{background:#E9EEF9;color:var(--ink);font-weight:600;}
+  table.rule td.eg{color:var(--accent-dark);font-style:italic;}
+
+  .vocab-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin:16px 0;}
+  @media (max-width:560px){.vocab-grid{grid-template-columns:1fr;}}
+  .vocab-item{background:var(--paper);border:1px solid var(--line);padding:11px 15px;}
+  .vocab-item .term{font-weight:600;color:var(--ink);font-size:14.5px;}
+  .vocab-item .def{font-size:13.5px;color:var(--muted);margin-top:2px;}
+
+  .exercise{background:var(--paper);border:1px solid var(--line);padding:20px 22px;margin:14px 0 0;}
+  .q{margin-bottom:16px;}
+  .q:last-child{margin-bottom:0;}
+  .q .prompt{font-size:14.5px;color:var(--ink);margin-bottom:7px;}
+  .q .prompt .n{color:var(--muted);margin-right:5px;}
+  .q input[type=text]{width:100%;max-width:420px;padding:8px 10px;font-size:14.5px;font-family:'Inter',sans-serif;border:1px solid #C7CCC4;background:#FBFBFA;color:var(--ink);}
+  .q input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .choices{display:flex;flex-direction:column;gap:7px;margin-top:5px;}
+  .choice{display:flex;align-items:center;gap:8px;font-size:14.5px;cursor:pointer;}
+  .feedback{font-size:13px;margin-top:5px;display:none;padding:3px 0;}
+  .feedback.show{display:block;}
+  .feedback.correct{color:var(--correct);}
+  .feedback.incorrect{color:var(--incorrect);}
+  .q.correct input[type=text]{background:var(--correct-bg);border-color:var(--correct);color:var(--correct);}
+  .q.incorrect input[type=text]{background:var(--incorrect-bg);border-color:var(--incorrect);color:var(--incorrect);}
+  .choice.correct-choice{color:var(--correct);font-weight:600;}
+  .choice.incorrect-choice{color:var(--incorrect);text-decoration:line-through;}
+
+  .exercise-actions{display:flex;gap:10px;margin-top:18px;}
+  button.check,button.reset{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;padding:8px 16px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;}
+  button.reset{background:transparent;color:var(--ink);}
+  button.check:hover{background:var(--accent-dark);border-color:var(--accent-dark);}
+  button.reset:hover{background:#EEF1EC;}
+  .score{font-size:13.5px;color:var(--muted);margin-top:10px;display:none;}
+  .score.show{display:block;}
+  .score b{color:var(--ink);}
+
+  .reading-passage{background:#FBFBFA;border:1px solid var(--line);padding:16px 18px;font-size:14.5px;margin-bottom:14px;}
+  .reading-passage p{margin:0 0 10px;}
+  .reading-passage p:last-child{margin-bottom:0;}
+
+  textarea{width:100%;min-height:150px;padding:12px 14px;font-family:'Inter',sans-serif;font-size:14.5px;border:1px solid #C7CCC4;background:#FBFBFA;color:var(--ink);resize:vertical;}
+  textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+
+  .voice-note-box{background:#FBF6EA;border:1px solid #E8D9AF;padding:14px 18px;margin-bottom:16px;font-size:14.5px;color:var(--ink);}
+  .voice-note-box strong{color:var(--warm);}
+
+  .speak-list{background:var(--paper);border:1px solid var(--line);padding:18px 22px;}
+  .speak-list ol{margin:0;padding-left:20px;}
+  .speak-list li{margin-bottom:10px;font-size:14.5px;}
+  .speak-list li:last-child{margin-bottom:0;}
+  .speak-note{color:var(--muted);font-size:13.5px;margin-bottom:12px;}
+
+  footer{margin-top:50px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:13px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="phase">Phase 1 — Foundations &amp; Confidence</div>
+    <h1>Lesson 3: Your Career Journey</h1>
+    <div class="meta">Ahmet Menteş · Business English · Lesson ~50 min · Homework ~40 min</div>
+  </div>
+
+  <p class="orientation">Today's focus is <strong>past simple</strong> — both regular verbs (worked, studied) and irregular ones (became, left, went, took) — so you can tell the story of your own move from nursing to medical sales clearly and correctly. Work through the <strong>Lesson</strong> tab with your teacher first (grammar, vocabulary, practice, reading, speaking), then use the <strong>Homework</strong> tab to consolidate on your own during the week.</p>
+
+  <div class="tabs-bar">
+    <button class="tab-btn lesson-btn active" id="tab-lesson-btn">Lesson</button>
+    <button class="tab-btn hw-btn" id="tab-hw-btn">Homework</button>
+  </div>
+
+  <div class="view active" id="lesson-view">
+    <div class="accordion" id="lesson-accordion"></div>
+  </div>
+
+  <div class="view" id="homework-view">
+    <div class="accordion" id="hw-accordion"></div>
+  </div>
+
+  <footer>Lesson 3 of 36 · Phase 1: Foundations &amp; Confidence · Prepared for Ahmet Menteş</footer>
+</div>
+
+<script>
+const lessonView = document.getElementById('lesson-view');
+const hwView = document.getElementById('homework-view');
+const tabLessonBtn = document.getElementById('tab-lesson-btn');
+const tabHwBtn = document.getElementById('tab-hw-btn');
+function showLesson(){ lessonView.classList.add('active'); hwView.classList.remove('active'); tabLessonBtn.classList.add('active'); tabHwBtn.classList.remove('active'); window.scrollTo({top:0}); }
+function showHomework(){ hwView.classList.add('active'); lessonView.classList.remove('active'); tabHwBtn.classList.add('active'); tabLessonBtn.classList.remove('active'); window.scrollTo({top:0}); }
+tabLessonBtn.addEventListener('click', showLesson);
+tabHwBtn.addEventListener('click', showHomework);
+
+function addAccordionSection(containerId, num, title, subtitle, openByDefault){
+  const container = document.getElementById(containerId);
+  const item = document.createElement('div');
+  item.className = 'accordion-item' + (openByDefault ? ' open' : '');
+  item.innerHTML = `
+    <button class="accordion-header">
+      <span class="num">${num}</span>
+      <span class="htext"><h2>${title}</h2><div class="sub">${subtitle}</div></span>
+      <span class="chev">⌄</span>
+    </button>
+    <div class="accordion-panel"><div class="accordion-panel-inner"><div class="accordion-body"></div></div></div>
+  `;
+  container.appendChild(item);
+  item.querySelector('.accordion-header').addEventListener('click', () => { item.classList.toggle('open'); });
+  return item.querySelector('.accordion-body');
+}
+
+function norm(s){ return s.toLowerCase().trim().replace(/[.!?,;:'"]/g,'').replace(/\s+/g,' '); }
+function matches(input, accepted){ const n = norm(input); return accepted.some(a => norm(a) === n); }
+
+function buildTextExercise(container, items){
+  const wrap = document.createElement('div'); wrap.className = 'exercise';
+  items.forEach((item, i) => {
+    const qDiv = document.createElement('div'); qDiv.className = 'q';
+    qDiv.innerHTML = `<div class="prompt"><span class="n">${i+1}.</span>${item.prompt}</div>
+      <input type="text" autocomplete="off" spellcheck="false"><div class="feedback"></div>`;
+    wrap.appendChild(qDiv);
+  });
+  const actions = document.createElement('div'); actions.className = 'exercise-actions';
+  actions.innerHTML = `<button class="check">Check Answers</button><button class="reset">Reset</button>`;
+  wrap.appendChild(actions);
+  const scoreEl = document.createElement('div'); scoreEl.className = 'score'; wrap.appendChild(scoreEl);
+  actions.querySelector('.check').addEventListener('click', () => {
+    let c = 0;
+    wrap.querySelectorAll('.q').forEach((qDiv, i) => {
+      const input = qDiv.querySelector('input'); const fb = qDiv.querySelector('.feedback');
+      const ok = matches(input.value, items[i].accepted);
+      qDiv.classList.remove('correct','incorrect'); qDiv.classList.add(ok ? 'correct' : 'incorrect');
+      fb.classList.add('show');
+      if(ok){ c++; fb.className='feedback show correct'; fb.textContent='✓ Correct'; }
+      else { fb.className='feedback show incorrect'; fb.textContent=`✗ Correct answer: ${items[i].accepted[0]}`; }
+    });
+    scoreEl.classList.add('show'); scoreEl.innerHTML = `Score: <b>${c} / ${items.length}</b>`;
+  });
+  actions.querySelector('.reset').addEventListener('click', () => {
+    wrap.querySelectorAll('.q').forEach(qDiv => { qDiv.classList.remove('correct','incorrect'); qDiv.querySelector('input').value=''; qDiv.querySelector('.feedback').classList.remove('show'); });
+    scoreEl.classList.remove('show');
+  });
+  container.appendChild(wrap);
+}
+
+let uidCounter = 0;
+function uid(){ return uidCounter++; }
+
+function buildMCExercise(container, items){
+  const exId = uid();
+  const wrap = document.createElement('div'); wrap.className = 'exercise';
+  items.forEach((item, i) => {
+    const qDiv = document.createElement('div'); qDiv.className = 'q';
+    const choicesHtml = item.options.map((opt,j) => `<label class="choice"><input type="radio" name="mc-${exId}-${i}" value="${j}"><span>${opt}</span></label>`).join('');
+    qDiv.innerHTML = `<div class="prompt"><span class="n">${i+1}.</span>${item.prompt}</div><div class="choices">${choicesHtml}</div><div class="feedback"></div>`;
+    wrap.appendChild(qDiv);
+  });
+  const actions = document.createElement('div'); actions.className = 'exercise-actions';
+  actions.innerHTML = `<button class="check">Check Answers</button><button class="reset">Reset</button>`;
+  wrap.appendChild(actions);
+  const scoreEl = document.createElement('div'); scoreEl.className = 'score'; wrap.appendChild(scoreEl);
+  actions.querySelector('.check').addEventListener('click', () => {
+    let c = 0;
+    wrap.querySelectorAll('.q').forEach((qDiv, i) => {
+      const selected = qDiv.querySelector('input[type=radio]:checked');
+      const fb = qDiv.querySelector('.feedback');
+      const labels = qDiv.querySelectorAll('.choice');
+      labels.forEach(l => l.classList.remove('correct-choice','incorrect-choice'));
+      const correctIdx = items[i].correct;
+      labels[correctIdx].classList.add('correct-choice');
+      fb.classList.add('show');
+      if(selected && parseInt(selected.value) === correctIdx){ c++; fb.className='feedback show correct'; fb.textContent='✓ Correct'; }
+      else { if(selected) labels[parseInt(selected.value)].classList.add('incorrect-choice'); fb.className='feedback show incorrect'; fb.textContent = selected ? '✗ Not quite — correct answer highlighted above' : '✗ No answer selected — correct answer highlighted above'; }
+    });
+    scoreEl.classList.add('show'); scoreEl.innerHTML = `Score: <b>${c} / ${items.length}</b>`;
+  });
+  actions.querySelector('.reset').addEventListener('click', () => {
+    wrap.querySelectorAll('.q').forEach(qDiv => { qDiv.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false); qDiv.querySelectorAll('.choice').forEach(l=>l.classList.remove('correct-choice','incorrect-choice')); qDiv.querySelector('.feedback').classList.remove('show'); });
+    scoreEl.classList.remove('show');
+  });
+  container.appendChild(wrap);
+}
+
+/* =========================================================
+   LESSON TAB
+   ========================================================= */
+const lAcc = 'lesson-accordion';
+
+let body = addAccordionSection(lAcc, 1, 'Grammar Focus: Past Simple (Regular &amp; Irregular)', 'Telling the story of your career change', true);
+body.innerHTML = `
+  <p><strong>Regular verbs</strong> add <strong>-ed</strong>: work → worked, study → studied, train → trained, resign → resigned.</p>
+  <p><strong>Irregular verbs</strong> change form completely and must be learned individually:</p>
+  <table class="rule">
+    <tr><th>Base form</th><th>Past simple</th><th>Example</th></tr>
+    <tr><td>be</td><td>was / were</td><td class="eg">I was a nurse for eight years.</td></tr>
+    <tr><td>become</td><td>became</td><td class="eg">I became a sales rep in 2022.</td></tr>
+    <tr><td>leave</td><td>left</td><td class="eg">I left my hospital job last year.</td></tr>
+    <tr><td>begin</td><td>began</td><td class="eg">I began my new career with lots of training.</td></tr>
+    <tr><td>go</td><td>went</td><td class="eg">I went to a training course in Istanbul.</td></tr>
+    <tr><td>take</td><td>took</td><td class="eg">I took a big risk changing careers.</td></tr>
+    <tr><td>have</td><td>had</td><td class="eg">I had a difficult decision to make.</td></tr>
+    <tr><td>make</td><td>made</td><td class="eg">I made the change for new opportunities.</td></tr>
+    <tr><td>feel</td><td>felt</td><td class="eg">I felt nervous on my first sales call.</td></tr>
+  </table>
+  <div class="callout"><strong>Negatives &amp; questions:</strong> use <em>didn't + base verb</em> and <em>Did + subject + base verb</em> — the main verb goes back to its base form. <em>I didn't expect it</em>, not <em>I didn't expected it</em>. <em>Did you work as a nurse?</em>, not <em>Did you worked...?</em></div>`;
+
+body = addAccordionSection(lAcc, 2, 'Vocabulary: Career &amp; Career Change', 'Terms for describing your professional journey');
+const vocabItems = [
+  ['patient care','the work of looking after patients directly'],
+  ['shift work','work scheduled in rotating blocks (day/night shifts)'],
+  ['career change','moving from one profession to a different one'],
+  ['transition','the process of changing from one state or job to another'],
+  ['resign','to formally leave a job'],
+  ['apply for (a job)','to formally request consideration for a position'],
+  ['promotion','being moved to a higher position at work'],
+  ['qualification','a certificate or degree that shows your training'],
+  ['background','your previous education, training, or experience'],
+  ['transferable skills','skills useful in more than one type of job'],
+];
+body.innerHTML = `<div class="vocab-grid">${vocabItems.map(v=>`<div class="vocab-item"><div class="term">${v[0]}</div><div class="def">${v[1]}</div></div>`).join('')}</div>`;
+
+body = addAccordionSection(lAcc, 3, 'Practice A: Fill in the Blank', 'Complete each sentence with the correct past simple form.');
+buildTextExercise(body, [
+  {prompt:"I ______ (work) as a nurse for eight years.", accepted:["I worked as a nurse for eight years"]},
+  {prompt:"She ______ (become) a sales rep last year.", accepted:["She became a sales rep last year"]},
+  {prompt:"He ______ (leave) his hospital job in 2021.", accepted:["He left his hospital job in 2021"]},
+  {prompt:"We ______ (begin) our training together.", accepted:["We began our training together"]},
+  {prompt:"I ______ (study) nursing at university.", accepted:["I studied nursing at university"]},
+  {prompt:"They ______ (go) to a conference last month.", accepted:["They went to a conference last month"]},
+  {prompt:"She ______ (take) a new position in Izmir.", accepted:["She took a new position in Izmir"]},
+  {prompt:"I ______ (have) a difficult decision to make.", accepted:["I had a difficult decision to make"]},
+  {prompt:"He ______ (make) the change for a better salary.", accepted:["He made the change for a better salary"]},
+  {prompt:"I ______ (feel) nervous on my first sales call.", accepted:["I felt nervous on my first sales call"]},
+]);
+
+body = addAccordionSection(lAcc, 4, 'Practice B: Multiple Choice', 'Choose the correct option.');
+buildMCExercise(body, [
+  {prompt:"Which is the correct past form of 'go'?", options:["goed","went","gone","going"], correct:1},
+  {prompt:"I ______ nursing for eight years before I changed careers.", options:["work","worked","working","works"], correct:1},
+  {prompt:"She ______ her decision carefully.", options:["maked","made","make","making"], correct:1},
+  {prompt:"Which is correct?", options:["I becomed a sales rep.","I became a sales rep."], correct:1},
+  {prompt:"We ______ our new jobs in January.", options:["begin","began","begun","beginned"], correct:1},
+  {prompt:"He ______ his old job for a new opportunity.", options:["leaved","left","leaves","leaving"], correct:1},
+  {prompt:"I ______ very nervous on my first day.", options:["feeled","felt","feel","feeling"], correct:1},
+  {prompt:"Which is the correct question form?", options:["Did you worked as a nurse?","Did you work as a nurse?"], correct:1},
+  {prompt:"They ______ to Dubai for a training course.", options:["goed","went","gone","go"], correct:1},
+  {prompt:"Negative form: I ______ expect such a big change.", options:["didn't","not","don't","no"], correct:0},
+]);
+
+body = addAccordionSection(lAcc, 5, 'Practice C: Error Correction', 'Each sentence has one error. Type the full corrected sentence.');
+buildTextExercise(body, [
+  {prompt:"I work as a nurse for eight years before I changed jobs.", accepted:["I worked as a nurse for eight years before I changed jobs"]},
+  {prompt:"She becomed a sales rep last year.", accepted:["She became a sales rep last year"]},
+  {prompt:"He leaved his hospital job in 2021.", accepted:["He left his hospital job in 2021"]},
+  {prompt:"We begin our training together, two years ago.", accepted:["We began our training together two years ago","We began our training together, two years ago"]},
+  {prompt:"I studyed nursing at university.", accepted:["I studied nursing at university"]},
+  {prompt:"They goed to a conference last month.", accepted:["They went to a conference last month"]},
+  {prompt:"She taked a new position in Izmir.", accepted:["She took a new position in Izmir"]},
+  {prompt:"I have a difficult decision to make, last year.", accepted:["I had a difficult decision to make last year","I had a difficult decision to make, last year"]},
+  {prompt:"He maked the change for a better salary.", accepted:["He made the change for a better salary"]},
+  {prompt:"Did you worked as a nurse before?", accepted:["Did you work as a nurse before"]},
+]);
+
+body = addAccordionSection(lAcc, 6, 'Practice D: Quick Reading &amp; Discussion', 'Read the short text, then answer True / False / Not Given.');
+body.innerHTML = `<div class="reading-passage"><p>Selin worked as a physiotherapist for six years before she changed careers. She studied physiotherapy at university and began her career in a busy hospital in Bursa. After a few years, she felt that she wanted a new challenge, so she took a course in medical sales. In 2020, she left her hospital job and joined a medical devices company as a junior sales rep. At first, she found it difficult, because she missed working directly with patients. However, she soon realized that her medical background helped her explain products more clearly than most of her colleagues. She made several important connections in her first year and won 'Rookie of the Year' at the company. Selin says she never regretted the change, even though it was a difficult decision at the time.</p></div>`;
+const lReadDiv = document.createElement('div'); body.appendChild(lReadDiv);
+buildMCExercise(lReadDiv, [
+  {prompt:"Selin studied physiotherapy at university.", options:["True","False","Not Given"], correct:0},
+  {prompt:"She began her career in Istanbul.", options:["True","False","Not Given"], correct:1},
+  {prompt:"She left her hospital job in 2019.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Selin found the transition easy from the start.", options:["True","False","Not Given"], correct:1},
+  {prompt:"She won an award in her first year.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Selin has children.", options:["True","False","Not Given"], correct:2},
+]);
+
+body = addAccordionSection(lAcc, 7, 'Practice E: Guided Speaking', 'Discuss with your teacher — speak your answers aloud, no need to type.');
+body.innerHTML = `<div class="speak-list"><p class="speak-note">This section is done live in the lesson — talk through it with your teacher.</p>
+  <ol>
+    <li>Tell your teacher about your own career journey, from nursing to sales.</li>
+    <li>Why did you decide to change careers?</li>
+    <li>What was the most difficult part of the transition?</li>
+    <li>What skills from nursing help you in sales?</li>
+    <li>Do you think you'll stay in sales, or make another change one day?</li>
+  </ol></div>`;
+
+body = addAccordionSection(lAcc, 8, 'Wrap-Up: Quick Check', 'Five quick questions to confirm today\'s grammar before you go.');
+buildMCExercise(body, [
+  {prompt:"Past simple of 'go':", options:["goed","went","gone","going"], correct:1},
+  {prompt:"Past simple of 'become':", options:["becomed","became","become","becoming"], correct:1},
+  {prompt:"I ______ (leave) my job in 2021.", options:["leaved","left","leave","leaving"], correct:1},
+  {prompt:"Question form: ______ you work as a nurse?", options:["Do","Did","Does","Were"], correct:1},
+  {prompt:"Negative: I ______ expect the change.", options:["didn't","not","don't","no"], correct:0},
+]);
+
+/* =========================================================
+   HOMEWORK TAB
+   ========================================================= */
+const hAcc = 'hw-accordion';
+
+body = addAccordionSection(hAcc, 1, 'Grammar Review: Past Simple', 'A quick recap before you practice.', true);
+body.innerHTML = `<p>Regular verbs add <strong>-ed</strong>. Key irregular verbs for this topic:</p>
+  <table class="rule">
+    <tr><td class="eg">be → was/were, become → became, leave → left, begin → began, go → went, take → took, have → had, make → made, feel → felt</td></tr>
+  </table>
+  <p>Negatives and questions use the base verb: <em>I didn't expect it. Did you work as a nurse?</em></p>`;
+
+body = addAccordionSection(hAcc, 2, 'Vocabulary Review', 'This week\'s terms, plus two new ones.');
+const hwVocab = [...vocabItems, ['make the switch','an informal way to say "change careers"'], ['hands-on experience','practical experience gained by doing a task directly']];
+body.innerHTML = `<div class="vocab-grid">${hwVocab.map(v=>`<div class="vocab-item"><div class="term">${v[0]}</div><div class="def">${v[1]}</div></div>`).join('')}</div>`;
+
+body = addAccordionSection(hAcc, 3, 'Practice A: Fill in the Blank', 'Complete each sentence with the correct past simple form.');
+buildTextExercise(body, [
+  {prompt:"My colleague ______ (work) in a hospital before she joined our company.", accepted:["My colleague worked in a hospital before she joined our company"]},
+  {prompt:"He ______ (become) a manager after five years.", accepted:["He became a manager after five years"]},
+  {prompt:"I ______ (leave) my previous job for a better opportunity.", accepted:["I left my previous job for a better opportunity"]},
+  {prompt:"We ______ (begin) the new project in March.", accepted:["We began the new project in March"]},
+  {prompt:"She ______ (study) engineering, not medicine.", accepted:["She studied engineering, not medicine"]},
+  {prompt:"They ______ (go) to Dubai for training last year.", accepted:["They went to Dubai for training last year"]},
+  {prompt:"I ______ (take) a big risk when I changed careers.", accepted:["I took a big risk when I changed careers"]},
+  {prompt:"He ______ (have) three interviews before he got the job.", accepted:["He had three interviews before he got the job"]},
+  {prompt:"She ______ (make) a good impression at the interview.", accepted:["She made a good impression at the interview"]},
+  {prompt:"I ______ (feel) confident about my decision.", accepted:["I felt confident about my decision"]},
+]);
+
+body = addAccordionSection(hAcc, 4, 'Practice B: Multiple Choice', 'Choose the correct option.');
+buildMCExercise(body, [
+  {prompt:"My colleague ______ in a hospital before she joined us.", options:["work","worked","working","works"], correct:1},
+  {prompt:"He ______ a manager after five years.", options:["become","became","becomes","becoming"], correct:1},
+  {prompt:"Which is correct?", options:["I leaved my job.","I left my job."], correct:1},
+  {prompt:"We ______ the new project in March.", options:["begin","began","begun","beginned"], correct:1},
+  {prompt:"She ______ engineering, not medicine.", options:["study","studyed","studied","studies"], correct:2},
+  {prompt:"They ______ to Dubai for training last year.", options:["go","goed","went","gone"], correct:2},
+  {prompt:"I ______ a big risk when I changed careers.", options:["take","took","taken","takes"], correct:1},
+  {prompt:"He ______ three interviews before he got the job.", options:["have","has","had","having"], correct:2},
+  {prompt:"She ______ a good impression at the interview.", options:["make","maked","made","makes"], correct:2},
+  {prompt:"Question form:", options:["Did you felt nervous?","Did you feel nervous?"], correct:1},
+]);
+
+body = addAccordionSection(hAcc, 5, 'Practice C: Error Correction', 'Each sentence has one error. Type the full corrected sentence.');
+buildTextExercise(body, [
+  {prompt:"My colleague work in a hospital before she joined us.", accepted:["My colleague worked in a hospital before she joined us"]},
+  {prompt:"He become a manager after five years.", accepted:["He became a manager after five years"]},
+  {prompt:"I leaved my previous job for a better opportunity.", accepted:["I left my previous job for a better opportunity"]},
+  {prompt:"We begin the new project in March.", accepted:["We began the new project in March"]},
+  {prompt:"She studyed engineering, not medicine.", accepted:["She studied engineering, not medicine"]},
+  {prompt:"They goed to Dubai for training last year.", accepted:["They went to Dubai for training last year"]},
+  {prompt:"I taked a big risk when I changed careers.", accepted:["I took a big risk when I changed careers"]},
+  {prompt:"He haved three interviews before he got the job.", accepted:["He had three interviews before he got the job"]},
+  {prompt:"She maked a good impression at the interview.", accepted:["She made a good impression at the interview"]},
+  {prompt:"Did you felt nervous on your first day?", accepted:["Did you feel nervous on your first day"]},
+]);
+
+body = addAccordionSection(hAcc, 6, 'Practice D: Sentence Transformation', 'Rewrite each sentence as instructed, keeping the same meaning.');
+buildTextExercise(body, [
+  {prompt:"Rewrite in past simple: 'I work as a nurse for eight years before I change my career.'", accepted:["I worked as a nurse for eight years before I changed my career"]},
+  {prompt:"Correct the irregular verb: 'She becomed a manager last year.'", accepted:["She became a manager last year"]},
+  {prompt:"Rewrite using 'make the switch': 'I changed from nursing to sales.'", accepted:["I made the switch from nursing to sales"]},
+  {prompt:"Fix the tense: 'We begin our new jobs in January.'", accepted:["We began our new jobs in January"]},
+  {prompt:"Rewrite as a question: 'You worked as a nurse before.'", accepted:["Did you work as a nurse before"]},
+  {prompt:"Correct the sentence: 'He leaved his old job for a new opportunity.'", accepted:["He left his old job for a new opportunity"]},
+  {prompt:"Rewrite using 'hands-on experience': 'I learned a lot by doing the job directly.'", accepted:["I gained hands-on experience by doing the job directly"]},
+  {prompt:"Fix the irregular verb: 'They goed to a conference last year.'", accepted:["They went to a conference last year"]},
+  {prompt:"Rewrite in the negative: 'I expected such a big change.'", accepted:["I didn't expect such a big change"]},
+  {prompt:"Correct the sentence: 'She taked a new position in Izmir.'", accepted:["She took a new position in Izmir"]},
+]);
+
+body = addAccordionSection(hAcc, 7, 'Practice E: Reading &amp; Comprehension', 'Read the text, then answer True / False / Not Given.');
+body.innerHTML = `<div class="reading-passage">
+  <p>Selin worked as a physiotherapist for six years before she changed careers. She studied physiotherapy at university and began her career in a busy hospital in Bursa. After a few years, she felt that she wanted a new challenge, so she took a course in medical sales. In 2020, she left her hospital job and joined a medical devices company as a junior sales rep. At first, she found it difficult, because she missed working directly with patients.</p>
+  <p>However, she soon realized that her medical background helped her explain products more clearly than most of her colleagues. Doctors trusted her advice because she understood the clinical side of the equipment, not just the sales pitch. She made several important connections in her first year and won 'Rookie of the Year' at the company. Her manager noticed her hands-on experience and gave her more responsibility earlier than most new reps usually get. Selin's family was surprised by her decision at first, because she had spent so many years training as a physiotherapist. Her parents worried that she was giving up a stable career for something less certain. But after two years in sales, Selin earns more than she did as a physiotherapist, and she has more flexibility in her schedule. She says she never regretted the change, even though it was a difficult decision at the time. She still keeps in touch with some of her old patients, and occasionally gives them informal advice.</p>
+</div>`;
+const hwReadDiv = document.createElement('div'); body.appendChild(hwReadDiv);
+buildMCExercise(hwReadDiv, [
+  {prompt:"Selin studied physiotherapy at university.", options:["True","False","Not Given"], correct:0},
+  {prompt:"She began her career in Istanbul.", options:["True","False","Not Given"], correct:1},
+  {prompt:"She left her hospital job in 2019.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Selin found the transition easy from the start.", options:["True","False","Not Given"], correct:1},
+  {prompt:"She won an award in her first year.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Selin has children.", options:["True","False","Not Given"], correct:2},
+  {prompt:"Her manager gave her more responsibility earlier than usual.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Selin's parents were immediately supportive of her decision.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Selin now earns less than she did as a physiotherapist.", options:["True","False","Not Given"], correct:1},
+  {prompt:"She still keeps in touch with some old patients.", options:["True","False","Not Given"], correct:0},
+]);
+
+body = addAccordionSection(hAcc, 8, 'Free Writing &amp; Speaking', 'Write it, then say it — for your teacher to review.');
+body.innerHTML = `
+  <div class="voice-note-box"><strong>Two steps, not one:</strong> First, write your answer in the box below. Once you've finished writing, record a short voice note (1–2 minutes) reading or explaining what you wrote, and send it to your teacher via WhatsApp. Your writing practice is also your speaking practice this week — don't skip the voice note.</div>
+  <div class="exercise">
+    <p class="q">Tell the story of your own career change, from nursing to medical sales. What did you do before, why did you decide to change, and how did you feel at each stage? Use past simple (regular and irregular verbs) correctly, and try to use at least three words from this week's vocabulary.</p>
+    <textarea placeholder="Start writing here..."></textarea>
+  </div>`;
+</script>
+</body>
+</html>

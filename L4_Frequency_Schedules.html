@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 4 — Frequency &amp; Schedules</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F5FA;
+    --paper:#FFFFFF;
+    --ink:#16264F;
+    --body:#3B4560;
+    --muted:#6B7290;
+    --accent:#2A4FA0;
+    --accent-dark:#1D3A7D;
+    --warm:#A9782F;
+    --line:#DCE1EE;
+    --correct:#1F7A3D;
+    --correct-bg:#EAF4EC;
+    --incorrect:#B3261E;
+    --incorrect-bg:#FBEAEA;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--body);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .page{max-width:780px;margin:0 auto;padding:40px 24px 120px;}
+  h1,h2,h3{font-family:'Lora',serif;color:var(--ink);margin:0;}
+
+  .masthead{border-bottom:2px solid var(--ink);padding-bottom:24px;margin-bottom:20px;}
+  .masthead .phase{color:var(--warm);font-size:14px;font-weight:600;}
+  .masthead h1{font-size:32px;font-weight:700;margin-top:6px;line-height:1.2;}
+  .masthead .meta{color:var(--muted);font-size:14px;margin-top:10px;}
+
+  .orientation{margin:0 0 24px;font-size:15.5px;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--accent);padding:16px 20px;}
+  .orientation strong{color:var(--ink);}
+
+  .tabs-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px;}
+  .tab-btn{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;padding:12px 26px;border:none;color:#fff;cursor:pointer;opacity:0.5;transition:opacity 0.2s ease;}
+  .tab-btn.active{opacity:1;}
+  .tab-btn.lesson-btn{background:var(--ink);}
+  .tab-btn.hw-btn{background:var(--warm);}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .accordion-item{border-top:1px solid var(--line);}
+  .accordion-item:last-child{border-bottom:1px solid var(--line);}
+  .accordion-header{display:flex;align-items:center;gap:14px;padding:20px 4px;cursor:pointer;user-select:none;background:none;border:none;width:100%;text-align:left;}
+  .accordion-header .num{font-family:'Lora',serif;font-size:15px;color:var(--accent);font-weight:600;flex:none;width:18px;}
+  .accordion-header .htext{flex:1;}
+  .accordion-header h2{font-size:20px;}
+  .accordion-header .sub{color:var(--muted);font-size:13.5px;margin-top:3px;}
+  .accordion-header .chev{flex:none;color:var(--muted);transition:transform 0.3s ease;font-size:18px;}
+  .accordion-item.open .chev{transform:rotate(180deg);}
+
+  .accordion-panel{display:none;}
+  .accordion-item.open .accordion-panel{display:block;}
+  .accordion-panel-inner{overflow:hidden;}
+  .accordion-body{padding:4px 4px 28px 32px;}
+
+  .callout{background:var(--paper);border-left:3px solid var(--warm);padding:14px 18px;margin:16px 0;font-size:15px;}
+  .callout strong{color:var(--ink);}
+
+  table.rule{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px;background:var(--paper);}
+  table.rule th,table.rule td{border:1px solid var(--line);padding:9px 12px;text-align:left;}
+  table.rule th{background:#E9EEF9;color:var(--ink);font-weight:600;}
+  table.rule td.eg{color:var(--accent-dark);font-style:italic;}
+
+  .vocab-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin:16px 0;}
+  @media (max-width:560px){.vocab-grid{grid-template-columns:1fr;}}
+  .vocab-item{background:var(--paper);border:1px solid var(--line);padding:11px 15px;}
+  .vocab-item .term{font-weight:600;color:var(--ink);font-size:14.5px;}
+  .vocab-item .def{font-size:13.5px;color:var(--muted);margin-top:2px;}
+
+  .exercise{background:var(--paper);border:1px solid var(--line);padding:20px 22px;margin:14px 0 0;}
+  .q{margin-bottom:16px;}
+  .q:last-child{margin-bottom:0;}
+  .q .prompt{font-size:14.5px;color:var(--ink);margin-bottom:7px;}
+  .q .prompt .n{color:var(--muted);margin-right:5px;}
+  .q input[type=text]{width:100%;max-width:420px;padding:8px 10px;font-size:14.5px;font-family:'Inter',sans-serif;border:1px solid #C7CCC4;background:#FBFBFA;color:var(--ink);}
+  .q input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .choices{display:flex;flex-direction:column;gap:7px;margin-top:5px;}
+  .choice{display:flex;align-items:center;gap:8px;font-size:14.5px;cursor:pointer;}
+  .feedback{font-size:13px;margin-top:5px;display:none;padding:3px 0;}
+  .feedback.show{display:block;}
+  .feedback.correct{color:var(--correct);}
+  .feedback.incorrect{color:var(--incorrect);}
+  .q.correct input[type=text]{background:var(--correct-bg);border-color:var(--correct);color:var(--correct);}
+  .q.incorrect input[type=text]{background:var(--incorrect-bg);border-color:var(--incorrect);color:var(--incorrect);}
+  .choice.correct-choice{color:var(--correct);font-weight:600;}
+  .choice.incorrect-choice{color:var(--incorrect);text-decoration:line-through;}
+
+  .exercise-actions{display:flex;gap:10px;margin-top:18px;}
+  button.check,button.reset{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;padding:8px 16px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;}
+  button.reset{background:transparent;color:var(--ink);}
+  button.check:hover{background:var(--accent-dark);border-color:var(--accent-dark);}
+  button.reset:hover{background:#EEF1EC;}
+  .score{font-size:13.5px;color:var(--muted);margin-top:10px;display:none;}
+  .score.show{display:block;}
+  .score b{color:var(--ink);}
+
+  .reading-passage{background:#FBFBFA;border:1px solid var(--line);padding:16px 18px;font-size:14.5px;margin-bottom:14px;}
+  .reading-passage p{margin:0 0 10px;}
+  .reading-passage p:last-child{margin-bottom:0;}
+
+  textarea{width:100%;min-height:150px;padding:12px 14px;font-family:'Inter',sans-serif;font-size:14.5px;border:1px solid #C7CCC4;background:#FBFBFA;color:var(--ink);resize:vertical;}
+  textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+
+  .voice-note-box{background:#FBF6EA;border:1px solid #E8D9AF;padding:14px 18px;margin-bottom:16px;font-size:14.5px;color:var(--ink);}
+  .voice-note-box strong{color:var(--warm);}
+
+  .speak-list{background:var(--paper);border:1px solid var(--line);padding:18px 22px;}
+  .speak-list ol{margin:0;padding-left:20px;}
+  .speak-list li{margin-bottom:10px;font-size:14.5px;}
+  .speak-list li:last-child{margin-bottom:0;}
+  .speak-note{color:var(--muted);font-size:13.5px;margin-bottom:12px;}
+
+  footer{margin-top:50px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:13px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="phase">Phase 1 — Foundations &amp; Confidence</div>
+    <h1>Lesson 4: Frequency &amp; Schedules</h1>
+    <div class="meta">Ahmet Menteş · Business English · Lesson ~50 min · Homework ~40 min</div>
+  </div>
+
+  <p class="orientation">Today covers two things you use constantly: <strong>adverbs of frequency</strong> (always, usually, often, sometimes, rarely, never) for describing your schedule, and <strong>a/an/the</strong> — small words that are easy to get wrong but change how clear your English sounds. Work through the <strong>Lesson</strong> tab with your teacher first (grammar, vocabulary, practice, reading, speaking), then use the <strong>Homework</strong> tab to consolidate on your own during the week.</p>
+
+  <div class="tabs-bar">
+    <button class="tab-btn lesson-btn active" id="tab-lesson-btn">Lesson</button>
+    <button class="tab-btn hw-btn" id="tab-hw-btn">Homework</button>
+  </div>
+
+  <div class="view active" id="lesson-view">
+    <div class="accordion" id="lesson-accordion"></div>
+  </div>
+
+  <div class="view" id="homework-view">
+    <div class="accordion" id="hw-accordion"></div>
+  </div>
+
+  <footer>Lesson 4 of 36 · Phase 1: Foundations &amp; Confidence · Prepared for Ahmet Menteş</footer>
+</div>
+
+<script>
+const lessonView = document.getElementById('lesson-view');
+const hwView = document.getElementById('homework-view');
+const tabLessonBtn = document.getElementById('tab-lesson-btn');
+const tabHwBtn = document.getElementById('tab-hw-btn');
+function showLesson(){ lessonView.classList.add('active'); hwView.classList.remove('active'); tabLessonBtn.classList.add('active'); tabHwBtn.classList.remove('active'); window.scrollTo({top:0}); }
+function showHomework(){ hwView.classList.add('active'); lessonView.classList.remove('active'); tabHwBtn.classList.add('active'); tabLessonBtn.classList.remove('active'); window.scrollTo({top:0}); }
+tabLessonBtn.addEventListener('click', showLesson);
+tabHwBtn.addEventListener('click', showHomework);
+
+function addAccordionSection(containerId, num, title, subtitle, openByDefault){
+  const container = document.getElementById(containerId);
+  const item = document.createElement('div');
+  item.className = 'accordion-item' + (openByDefault ? ' open' : '');
+  item.innerHTML = `
+    <button class="accordion-header">
+      <span class="num">${num}</span>
+      <span class="htext"><h2>${title}</h2><div class="sub">${subtitle}</div></span>
+      <span class="chev">⌄</span>
+    </button>
+    <div class="accordion-panel"><div class="accordion-panel-inner"><div class="accordion-body"></div></div></div>
+  `;
+  container.appendChild(item);
+  item.querySelector('.accordion-header').addEventListener('click', () => { item.classList.toggle('open'); });
+  return item.querySelector('.accordion-body');
+}
+
+function norm(s){ return s.toLowerCase().trim().replace(/[.!?,;:'"]/g,'').replace(/\s+/g,' '); }
+function matches(input, accepted){ const n = norm(input); return accepted.some(a => norm(a) === n); }
+
+function buildTextExercise(container, items){
+  const wrap = document.createElement('div'); wrap.className = 'exercise';
+  items.forEach((item, i) => {
+    const qDiv = document.createElement('div'); qDiv.className = 'q';
+    qDiv.innerHTML = `<div class="prompt"><span class="n">${i+1}.</span>${item.prompt}</div>
+      <input type="text" autocomplete="off" spellcheck="false"><div class="feedback"></div>`;
+    wrap.appendChild(qDiv);
+  });
+  const actions = document.createElement('div'); actions.className = 'exercise-actions';
+  actions.innerHTML = `<button class="check">Check Answers</button><button class="reset">Reset</button>`;
+  wrap.appendChild(actions);
+  const scoreEl = document.createElement('div'); scoreEl.className = 'score'; wrap.appendChild(scoreEl);
+  actions.querySelector('.check').addEventListener('click', () => {
+    let c = 0;
+    wrap.querySelectorAll('.q').forEach((qDiv, i) => {
+      const input = qDiv.querySelector('input'); const fb = qDiv.querySelector('.feedback');
+      const ok = matches(input.value, items[i].accepted);
+      qDiv.classList.remove('correct','incorrect'); qDiv.classList.add(ok ? 'correct' : 'incorrect');
+      fb.classList.add('show');
+      if(ok){ c++; fb.className='feedback show correct'; fb.textContent='✓ Correct'; }
+      else { fb.className='feedback show incorrect'; fb.textContent=`✗ Correct answer: ${items[i].accepted[0]}`; }
+    });
+    scoreEl.classList.add('show'); scoreEl.innerHTML = `Score: <b>${c} / ${items.length}</b>`;
+  });
+  actions.querySelector('.reset').addEventListener('click', () => {
+    wrap.querySelectorAll('.q').forEach(qDiv => { qDiv.classList.remove('correct','incorrect'); qDiv.querySelector('input').value=''; qDiv.querySelector('.feedback').classList.remove('show'); });
+    scoreEl.classList.remove('show');
+  });
+  container.appendChild(wrap);
+}
+
+let uidCounter = 0;
+function uid(){ return uidCounter++; }
+
+function buildMCExercise(container, items){
+  const exId = uid();
+  const wrap = document.createElement('div'); wrap.className = 'exercise';
+  items.forEach((item, i) => {
+    const qDiv = document.createElement('div'); qDiv.className = 'q';
+    const choicesHtml = item.options.map((opt,j) => `<label class="choice"><input type="radio" name="mc-${exId}-${i}" value="${j}"><span>${opt}</span></label>`).join('');
+    qDiv.innerHTML = `<div class="prompt"><span class="n">${i+1}.</span>${item.prompt}</div><div class="choices">${choicesHtml}</div><div class="feedback"></div>`;
+    wrap.appendChild(qDiv);
+  });
+  const actions = document.createElement('div'); actions.className = 'exercise-actions';
+  actions.innerHTML = `<button class="check">Check Answers</button><button class="reset">Reset</button>`;
+  wrap.appendChild(actions);
+  const scoreEl = document.createElement('div'); scoreEl.className = 'score'; wrap.appendChild(scoreEl);
+  actions.querySelector('.check').addEventListener('click', () => {
+    let c = 0;
+    wrap.querySelectorAll('.q').forEach((qDiv, i) => {
+      const selected = qDiv.querySelector('input[type=radio]:checked');
+      const fb = qDiv.querySelector('.feedback');
+      const labels = qDiv.querySelectorAll('.choice');
+      labels.forEach(l => l.classList.remove('correct-choice','incorrect-choice'));
+      const correctIdx = items[i].correct;
+      labels[correctIdx].classList.add('correct-choice');
+      fb.classList.add('show');
+      if(selected && parseInt(selected.value) === correctIdx){ c++; fb.className='feedback show correct'; fb.textContent='✓ Correct'; }
+      else { if(selected) labels[parseInt(selected.value)].classList.add('incorrect-choice'); fb.className='feedback show incorrect'; fb.textContent = selected ? '✗ Not quite — correct answer highlighted above' : '✗ No answer selected — correct answer highlighted above'; }
+    });
+    scoreEl.classList.add('show'); scoreEl.innerHTML = `Score: <b>${c} / ${items.length}</b>`;
+  });
+  actions.querySelector('.reset').addEventListener('click', () => {
+    wrap.querySelectorAll('.q').forEach(qDiv => { qDiv.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false); qDiv.querySelectorAll('.choice').forEach(l=>l.classList.remove('correct-choice','incorrect-choice')); qDiv.querySelector('.feedback').classList.remove('show'); });
+    scoreEl.classList.remove('show');
+  });
+  container.appendChild(wrap);
+}
+
+/* =========================================================
+   LESSON TAB
+   ========================================================= */
+const lAcc = 'lesson-accordion';
+
+let body = addAccordionSection(lAcc, 1, 'Grammar Focus: Adverbs of Frequency &amp; a/an/the', 'Two small but essential grammar points', true);
+body.innerHTML = `
+  <p><strong>Adverbs of frequency</strong> go <em>before</em> the main verb, but <em>after</em> the verb "to be":</p>
+  <table class="rule">
+    <tr><th>100% → 0%</th><th>Position</th><th>Example</th></tr>
+    <tr><td>always, usually, often, sometimes, occasionally, rarely, never</td><td>before main verb</td><td class="eg">I always check my emails.</td></tr>
+    <tr><td>same list</td><td>after "am/is/are"</td><td class="eg">She is often late for meetings.</td></tr>
+  </table>
+  <p><strong>Articles a / an / the:</strong> use <em>a/an</em> the first time you mention something, or for something non-specific. Use <em>an</em> before a vowel sound. Use <em>the</em> once it's already known, specific, or unique.</p>
+  <table class="rule">
+    <tr><th>Rule</th><th>Example</th></tr>
+    <tr><td>a/an — first mention, non-specific</td><td class="eg">I have a meeting today. / I have an appointment at 3.</td></tr>
+    <tr><td>the — already mentioned, specific, unique</td><td class="eg">The meeting starts at ten. / The hospital has 200 beds.</td></tr>
+  </table>
+  <div class="callout"><strong>Watch out:</strong> "an" is about the <em>sound</em>, not the letter — <em>an hour</em> (silent h), but <em>a hospital</em>.</div>`;
+
+body = addAccordionSection(lAcc, 2, 'Vocabulary: Frequency &amp; Schedules', 'Terms for describing your working week');
+const vocabItems = [
+  ['appointment','an arranged time to meet someone'],
+  ['agenda','a list of topics to discuss in a meeting'],
+  ['deadline','the latest time something must be finished'],
+  ['routine','a fixed, regular way of doing things'],
+  ['on a regular basis','happening repeatedly, at set intervals'],
+  ['day off','a day when you don\'t work'],
+  ['quarterly','happening once every three months'],
+  ['biweekly','happening every two weeks'],
+  ['reschedule','to change the time of a planned event'],
+  ['time off','a period away from work'],
+];
+body.innerHTML = `<div class="vocab-grid">${vocabItems.map(v=>`<div class="vocab-item"><div class="term">${v[0]}</div><div class="def">${v[1]}</div></div>`).join('')}</div>`;
+
+body = addAccordionSection(lAcc, 3, 'Practice A: Fill in the Blank', 'Insert the adverb, or the correct article, and write the full sentence.');
+buildTextExercise(body, [
+  {prompt:"Insert 'always': \"I check my emails before a meeting.\"", accepted:["I always check my emails before a meeting"]},
+  {prompt:"Insert 'often': \"She is late for the Monday meeting.\"", accepted:["She is often late for the Monday meeting"]},
+  {prompt:"Insert 'rarely': \"We have international calls on Fridays.\"", accepted:["We rarely have international calls on Fridays"]},
+  {prompt:"Insert 'never': \"He misses a deadline.\"", accepted:["He never misses a deadline"]},
+  {prompt:"Insert 'usually': \"I am busy on Mondays.\"", accepted:["I am usually busy on Mondays"]},
+  {prompt:"Insert 'sometimes': \"We work late on Thursdays.\"", accepted:["We sometimes work late on Thursdays","Sometimes we work late on Thursdays"]},
+  {prompt:"Insert 'occasionally': \"I travel for work.\"", accepted:["I occasionally travel for work"]},
+  {prompt:"Fill in a/an/the: \"I have ___ meeting today.\"", accepted:["I have a meeting today"]},
+  {prompt:"Fill in a/an/the: \"___ meeting starts at ten.\"", accepted:["The meeting starts at ten"]},
+  {prompt:"Fill in a/an/the: \"I work in ___ hospital in Izmir.\"", accepted:["I work in a hospital in Izmir"]},
+]);
+
+body = addAccordionSection(lAcc, 4, 'Practice B: Multiple Choice', 'Choose the correct option.');
+buildMCExercise(body, [
+  {prompt:"Which sentence has correct adverb position?", options:["I always check my emails.","I check always my emails."], correct:0},
+  {prompt:"She is ______ late for meetings.", options:["often","be often","often be","is often"], correct:0},
+  {prompt:"Which is correct?", options:["We rarely have international calls.","We have rarely international calls."], correct:0},
+  {prompt:"He ______ misses a deadline.", options:["never","not never","don't never","no"], correct:0},
+  {prompt:"Choose the correct article: I have ______ meeting today.", options:["a","an","the","(no article)"], correct:0},
+  {prompt:"Choose the correct article: ______ meeting starts at ten.", options:["A","An","The","(no article)"], correct:2},
+  {prompt:"Choose the correct article: I work in ______ hospital in Izmir.", options:["a","an","the","(no article)"], correct:0},
+  {prompt:"Choose the correct article (already mentioned): ______ hospital has 200 beds.", options:["A","An","The","(no article)"], correct:2},
+  {prompt:"Which is correct?", options:["I am usually busy on Mondays.","I usually am busy on Mondays."], correct:0},
+  {prompt:"We ______ work late on Thursdays.", options:["sometimes","be sometimes","sometimes be","is sometimes"], correct:0},
+]);
+
+body = addAccordionSection(lAcc, 5, 'Practice C: Error Correction', 'Each sentence has one error. Type the full corrected sentence.');
+buildTextExercise(body, [
+  {prompt:"I check always my emails before a meeting.", accepted:["I always check my emails before a meeting"]},
+  {prompt:"She often is late for meetings.", accepted:["She is often late for meetings"]},
+  {prompt:"We have rarely international calls.", accepted:["We rarely have international calls"]},
+  {prompt:"He misses never a deadline.", accepted:["He never misses a deadline"]},
+  {prompt:"I usually am busy on Mondays.", accepted:["I am usually busy on Mondays"]},
+  {prompt:"I have meeting today.", accepted:["I have a meeting today"]},
+  {prompt:"Meeting starts at ten.", accepted:["The meeting starts at ten"]},
+  {prompt:"I work in hospital in Izmir.", accepted:["I work in a hospital in Izmir"]},
+  {prompt:"Hospital has 200 beds.", accepted:["The hospital has 200 beds"]},
+  {prompt:"We sometimes are late.", accepted:["We are sometimes late"]},
+]);
+
+body = addAccordionSection(lAcc, 6, 'Practice D: Quick Reading &amp; Discussion', 'Read the short text, then answer True / False / Not Given.');
+body.innerHTML = `<div class="reading-passage"><p>Ayşe works as a product specialist for a healthcare company. She usually starts her day at eight and always checks her emails before her first meeting. She often visits a hospital in the morning and spends the afternoon in the office. On Tuesdays, she rarely has meetings, so she uses the day to prepare reports. She occasionally travels to other cities for a conference, but she never misses her Friday call with the regional manager. Ayşe says a typical week is busy but predictable, and she likes having a routine. The only thing she sometimes finds difficult is fitting in her lunch break, because a client call can start at any time.</p></div>`;
+const lReadDiv = document.createElement('div'); body.appendChild(lReadDiv);
+buildMCExercise(lReadDiv, [
+  {prompt:"Ayşe always checks emails before her first meeting.", options:["True","False","Not Given"], correct:0},
+  {prompt:"She often visits a hospital in the afternoon.", options:["True","False","Not Given"], correct:1},
+  {prompt:"She has meetings every Tuesday.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Ayşe has worked at the company for five years.", options:["True","False","Not Given"], correct:2},
+  {prompt:"She never misses her Friday call.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Ayşe finds lunch breaks easy to plan.", options:["True","False","Not Given"], correct:1},
+]);
+
+body = addAccordionSection(lAcc, 7, 'Practice E: Guided Speaking', 'Discuss with your teacher — speak your answers aloud, no need to type.');
+body.innerHTML = `<div class="speak-list"><p class="speak-note">This section is done live in the lesson — talk through it with your teacher.</p>
+  <ol>
+    <li>How often do you check your emails?</li>
+    <li>What do you usually do on Mondays?</li>
+    <li>Do you ever travel for work? How often?</li>
+    <li>Is there a task you rarely do, but should do more often?</li>
+    <li>Describe a typical week using at least three frequency adverbs.</li>
+  </ol></div>`;
+
+body = addAccordionSection(lAcc, 8, 'Wrap-Up: Quick Check', 'Five quick questions to confirm today\'s grammar before you go.');
+buildMCExercise(body, [
+  {prompt:"Which is correct?", options:["I always check emails.","I check always emails."], correct:0},
+  {prompt:"She is ______ late.", options:["often","be often","often be","is often"], correct:0},
+  {prompt:"Choose the article: I have ______ appointment today.", options:["a","an","the","(no article)"], correct:1},
+  {prompt:"Choose the article: ______ appointment is at three.", options:["A","An","The","(no article)"], correct:2},
+  {prompt:"We ______ have calls on Sundays.", options:["never","not never","don't never","no"], correct:0},
+]);
+
+/* =========================================================
+   HOMEWORK TAB
+   ========================================================= */
+const hAcc = 'hw-accordion';
+
+body = addAccordionSection(hAcc, 1, 'Grammar Review: Frequency &amp; Articles', 'A quick recap before you practice.', true);
+body.innerHTML = `<p>Frequency adverbs: <strong>before</strong> the main verb, <strong>after</strong> "am/is/are". Order (100%→0%): always, usually, often, sometimes, occasionally, rarely, never.</p>
+  <p>Articles: <strong>a/an</strong> for first mention or non-specific (an before a vowel sound); <strong>the</strong> once it's already known or specific.</p>
+  <table class="rule">
+    <tr><td class="eg">I always check my emails. / She is often late. / I have a meeting. The meeting starts at ten.</td></tr>
+  </table>`;
+
+body = addAccordionSection(hAcc, 2, 'Vocabulary Review', 'This week\'s terms, plus two new ones.');
+const hwVocab = [...vocabItems, ['reschedule (again)','a reminder: to change a planned time to a new one'], ['catch up on (something)','to spend time doing tasks you\'re behind on']];
+body.innerHTML = `<div class="vocab-grid">${hwVocab.map(v=>`<div class="vocab-item"><div class="term">${v[0]}</div><div class="def">${v[1]}</div></div>`).join('')}</div>`;
+
+body = addAccordionSection(hAcc, 3, 'Practice A: Fill in the Blank', 'Insert the adverb, or the correct article, and write the full sentence.');
+buildTextExercise(body, [
+  {prompt:"Insert 'usually': \"I am busy on Wednesdays.\"", accepted:["I am usually busy on Wednesdays"]},
+  {prompt:"Insert 'always': \"She arrives early for meetings.\"", accepted:["She always arrives early for meetings"]},
+  {prompt:"Insert 'rarely': \"We travel abroad for work.\"", accepted:["We rarely travel abroad for work"]},
+  {prompt:"Insert 'never': \"He forgets a client's name.\"", accepted:["He never forgets a client's name"]},
+  {prompt:"Insert 'often': \"They are busy on Fridays.\"", accepted:["They are often busy on Fridays"]},
+  {prompt:"Fill in a/an/the: \"I have ___ meeting at nine.\"", accepted:["I have a meeting at nine"]},
+  {prompt:"Fill in a/an/the: \"___ meeting was very useful.\"", accepted:["The meeting was very useful"]},
+  {prompt:"Fill in a/an/the: \"She works in ___ office in Ankara.\"", accepted:["She works in an office in Ankara"]},
+  {prompt:"Fill in a/an/the: \"___ office has 50 employees.\"", accepted:["The office has 50 employees"]},
+  {prompt:"Insert 'sometimes': \"We work on weekends.\"", accepted:["We sometimes work on weekends","Sometimes we work on weekends"]},
+]);
+
+body = addAccordionSection(hAcc, 4, 'Practice B: Multiple Choice', 'Choose the correct option.');
+buildMCExercise(body, [
+  {prompt:"Which is correct?", options:["She always arrives early.","She arrives always early."], correct:0},
+  {prompt:"We ______ travel abroad for work.", options:["rarely","be rarely","rarely be","are rarely"], correct:0},
+  {prompt:"He ______ forgets a client's name.", options:["never","not never","don't never","no"], correct:0},
+  {prompt:"Choose the article: I have ______ meeting at nine.", options:["a","an","the","(no article)"], correct:0},
+  {prompt:"Choose the article: ______ meeting was very useful.", options:["A","An","The","(no article)"], correct:2},
+  {prompt:"Choose the article: She works in ______ office in Ankara.", options:["a","an","the","(no article)"], correct:1},
+  {prompt:"Choose the article: ______ office has 50 employees.", options:["A","An","The","(no article)"], correct:2},
+  {prompt:"Which is correct?", options:["They are often busy on Fridays.","They often are busy on Fridays."], correct:0},
+  {prompt:"We ______ work on weekends.", options:["sometimes","be sometimes","sometimes be","is sometimes"], correct:0},
+  {prompt:"Which is correct?", options:["I am usually busy on Wednesdays.","I usually am busy on Wednesdays."], correct:0},
+]);
+
+body = addAccordionSection(hAcc, 5, 'Practice C: Error Correction', 'Each sentence has one error. Type the full corrected sentence.');
+buildTextExercise(body, [
+  {prompt:"She arrives always early for meetings.", accepted:["She always arrives early for meetings"]},
+  {prompt:"We travel rarely abroad for work.", accepted:["We rarely travel abroad for work"]},
+  {prompt:"He forgets never a client's name.", accepted:["He never forgets a client's name"]},
+  {prompt:"I have meeting at nine.", accepted:["I have a meeting at nine"]},
+  {prompt:"Meeting was very useful.", accepted:["The meeting was very useful"]},
+  {prompt:"She works in office in Ankara.", accepted:["She works in an office in Ankara"]},
+  {prompt:"Office has 50 employees.", accepted:["The office has 50 employees"]},
+  {prompt:"They often are busy on Fridays.", accepted:["They are often busy on Fridays"]},
+  {prompt:"We work sometimes on weekends.", accepted:["We sometimes work on weekends"]},
+  {prompt:"I usually am busy on Wednesdays.", accepted:["I am usually busy on Wednesdays"]},
+]);
+
+body = addAccordionSection(hAcc, 6, 'Practice D: Sentence Transformation', 'Insert the adverb, or fix the article, keeping the same meaning.');
+buildTextExercise(body, [
+  {prompt:"Insert 'always' correctly: \"I check my calendar in the morning.\"", accepted:["I always check my calendar in the morning"]},
+  {prompt:"Insert 'often' correctly: \"She is late for calls.\"", accepted:["She is often late for calls"]},
+  {prompt:"Insert 'rarely' correctly: \"We have problems with clients.\"", accepted:["We rarely have problems with clients"]},
+  {prompt:"Insert 'never' correctly: \"He cancels a meeting.\"", accepted:["He never cancels a meeting"]},
+  {prompt:"Fix the article: \"I work in hospital in Bursa.\"", accepted:["I work in a hospital in Bursa"]},
+  {prompt:"Fix the article: \"Hospital is very modern.\"", accepted:["The hospital is very modern"]},
+  {prompt:"Fix the article: \"She has appointment at four.\"", accepted:["She has an appointment at four"]},
+  {prompt:"Insert 'usually' correctly: \"We are busy in December.\"", accepted:["We are usually busy in December"]},
+  {prompt:"Insert 'sometimes' correctly: \"I work from home.\"", accepted:["I sometimes work from home","Sometimes I work from home"]},
+  {prompt:"Fix the article: \"Appointment was rescheduled.\"", accepted:["The appointment was rescheduled"]},
+]);
+
+body = addAccordionSection(hAcc, 7, 'Practice E: Reading &amp; Comprehension', 'Read the text, then answer True / False / Not Given.');
+body.innerHTML = `<div class="reading-passage">
+  <p>Burak works as a regional manager for a pharmaceutical distributor. He usually starts his day early and always reviews his schedule before breakfast. He often has back-to-back meetings on Mondays and Tuesdays, but Wednesdays are usually quieter, so he uses that day for paperwork and reports. Burak rarely takes a full day off during the working week, but he occasionally leaves early on Fridays if his targets are on track.</p>
+  <p>His job requires a lot of flexibility. He sometimes has to reschedule an appointment at the last minute because of an urgent client request, and he never complains about it, because he understands that healthcare clients often have unpredictable schedules too. Burak's assistant helps him manage his diary and always reminds him about upcoming deadlines. Twice a year, Burak takes a longer period of time off — usually one week in the summer and a few days around the New Year. He says the most important skill in his job is not the ability to sell, but the ability to organize a busy and constantly changing schedule. He occasionally trains new regional managers on how to plan their week efficiently, and he always tells them the same thing: build in extra time, because something unexpected always happens.</p>
+</div>`;
+const hwReadDiv = document.createElement('div'); body.appendChild(hwReadDiv);
+buildMCExercise(hwReadDiv, [
+  {prompt:"Burak always reviews his schedule before breakfast.", options:["True","False","Not Given"], correct:0},
+  {prompt:"His busiest days are usually Thursdays and Fridays.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Burak takes a full day off every week.", options:["True","False","Not Given"], correct:1},
+  {prompt:"He has worked at the company for ten years.", options:["True","False","Not Given"], correct:2},
+  {prompt:"Burak sometimes has to reschedule appointments last minute.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Burak's assistant helps him manage his diary.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Burak takes his longer time off only in winter.", options:["True","False","Not Given"], correct:1},
+  {prompt:"Burak believes selling is the most important skill in his job.", options:["True","False","Not Given"], correct:1},
+  {prompt:"He occasionally trains new regional managers.", options:["True","False","Not Given"], correct:0},
+  {prompt:"Burak advises new managers to plan every minute with no extra time.", options:["True","False","Not Given"], correct:1},
+]);
+
+body = addAccordionSection(hAcc, 8, 'Free Writing &amp; Speaking', 'Write it, then say it — for your teacher to review.');
+body.innerHTML = `
+  <div class="voice-note-box"><strong>Two steps, not one:</strong> First, write your answer in the box below. Once you've finished writing, record a short voice note (1–2 minutes) reading or explaining what you wrote, and send it to your teacher via WhatsApp. Your writing practice is also your speaking practice this week — don't skip the voice note.</div>
+  <div class="exercise">
+    <p class="q">Describe a typical week at work, using at least four frequency adverbs (always, usually, often, sometimes, rarely, never) and correct articles (a/an/the). Mention anything unusual or temporary that doesn't fit your normal routine.</p>
+    <textarea placeholder="Start writing here..."></textarea>
+  </div>`;
+</script>
+</body>
+</html>
